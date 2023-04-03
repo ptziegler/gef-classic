@@ -10,7 +10,11 @@ jobs:
   unit-test-results:
     name: Unit Test Results
     runs-on: ubuntu-latest
+<<<<<<< Upstream, based on master
     if: github.event.workflow_run.conclusion != 'skipped'
+=======
+    if: github.event.workflow_run.conclusion == 'success'
+>>>>>>> 8f2edc8 Add a new job to the GitHub action for publishing the test results.
 
     steps:
       - name: Download and Extract Artifacts
