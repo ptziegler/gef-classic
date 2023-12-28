@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.eclipse.draw2d.test.TextFlowWrapTest$BreakIteratorFactoryMock">
+   <service>
+      <provide interface="org.eclipse.draw2d.text.BreakIteratorFactory"/>
+   </service>
+   <implementation class="org.eclipse.draw2d.test.TextFlowWrapTest$BreakIteratorFactoryMock"/>
+</scr:component>

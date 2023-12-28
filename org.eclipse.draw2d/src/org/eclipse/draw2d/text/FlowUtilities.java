@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2023 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.draw2d.text;
 
+import java.text.BreakIterator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
@@ -20,8 +22,6 @@ import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.TextUtilities;
-
-import com.ibm.icu.text.BreakIterator;
 
 /**
  * Utility class for FlowFigures.
@@ -40,10 +40,10 @@ public class FlowUtilities {
 	 */
 	public static FlowUtilities INSTANCE = new FlowUtilities();
 
-	private static final BreakIterator INTERNAL_LINE_BREAK = BreakIterator.getLineInstance();
+	private static final BreakIterator INTERNAL_LINE_BREAK = BreakIteratorFactory.getInstance();
 	private static TextLayout layout;
 
-	static final BreakIterator LINE_BREAK = BreakIterator.getLineInstance();
+	static final BreakIterator LINE_BREAK = BreakIteratorFactory.getInstance();
 
 	static boolean canBreakAfter(char c) {
 		boolean result = Character.isWhitespace(c) || c == '-';

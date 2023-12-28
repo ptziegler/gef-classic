@@ -14,7 +14,8 @@ Export-Package: org.eclipse.draw2d,
  org.eclipse.draw2d.text,
  org.eclipse.draw2d.widgets,
  org.eclipse.draw2d.zoom
-Import-Package: com.ibm.icu.text
+Import-Package: com.ibm.icu.text,
+ org.osgi.framework;version="[1.0.0,2.0.0)"
 Require-Bundle: org.eclipse.swt;bundle-version="[3.4.0,4.0.0)";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17

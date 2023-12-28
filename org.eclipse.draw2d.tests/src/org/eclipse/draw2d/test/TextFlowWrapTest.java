@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2023 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,21 +12,21 @@
  *******************************************************************************/
 package org.eclipse.draw2d.test;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.text.BreakIteratorFactory;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.InlineFlow;
 import org.eclipse.draw2d.text.ParagraphTextLayout;
 import org.eclipse.draw2d.text.TextFlow;
 import org.eclipse.draw2d.text.TextFragmentBox;
 
-import org.junit.Ignore;
 import org.junit.Test;
+import org.osgi.service.component.annotations.Component;
 
-// FIXME The text flow wrap test are currently unstable and therefore deactivated
-@Ignore
 public class TextFlowWrapTest extends BaseTestCase {
 
 	// @TODO:Pratik create similar test cases for bidi...where the fragments are
@@ -57,7 +57,7 @@ public class TextFlowWrapTest extends BaseTestCase {
 	protected void doTest2(String string1, String string2, String widthString, String[] answers) {
 		int width = -1;
 		if (widthString != null) {
-			width = FigureUtilities.getStringExtents(widthString, TAHOMA).width;
+			width = FigureUtilities.getStringExtents(widthString, SERIF).width;
 		}
 		figure.setSize(width, 1000);
 		textFlow.setText(string1);
@@ -269,11 +269,11 @@ public class TextFlowWrapTest extends BaseTestCase {
 		figure = new FlowPage();
 		textFlow = new TextFlow();
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_HARD));
-		textFlow.setFont(TAHOMA);
+		textFlow.setFont(SERIF);
 		figure.add(textFlow);
 		textFlow2 = new TextFlow();
 		textFlow2.setLayoutManager(new ParagraphTextLayout(textFlow2, ParagraphTextLayout.WORD_WRAP_HARD));
-		textFlow2.setFont(TAHOMA);
+		textFlow2.setFont(SERIF);
 		figure.add(textFlow2);
 
 		runGenericTests();
@@ -285,11 +285,11 @@ public class TextFlowWrapTest extends BaseTestCase {
 		figure = new FlowPage();
 		textFlow = new TextFlow();
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_SOFT));
-		textFlow.setFont(TAHOMA);
+		textFlow.setFont(SERIF);
 		figure.add(textFlow);
 		textFlow2 = new TextFlow();
 		textFlow2.setLayoutManager(new ParagraphTextLayout(textFlow2, ParagraphTextLayout.WORD_WRAP_SOFT));
-		textFlow2.setFont(TAHOMA);
+		textFlow2.setFont(SERIF);
 		figure.add(textFlow2);
 
 		runGenericTests();
@@ -301,11 +301,11 @@ public class TextFlowWrapTest extends BaseTestCase {
 		figure = new FlowPage();
 		textFlow = new TextFlow();
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_TRUNCATE));
-		textFlow.setFont(TAHOMA);
+		textFlow.setFont(SERIF);
 		figure.add(textFlow);
 		textFlow2 = new TextFlow();
 		textFlow2.setLayoutManager(new ParagraphTextLayout(textFlow2, ParagraphTextLayout.WORD_WRAP_TRUNCATE));
-		textFlow2.setFont(TAHOMA);
+		textFlow2.setFont(SERIF);
 		figure.add(textFlow2);
 
 		runGenericTests();
@@ -318,12 +318,12 @@ public class TextFlowWrapTest extends BaseTestCase {
 		InlineFlow inline = new InlineFlow();
 		textFlow = new TextFlow();
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_SOFT));
-		textFlow.setFont(TAHOMA);
+		textFlow.setFont(SERIF);
 		inline.add(textFlow);
 		figure.add(inline);
 		textFlow2 = new TextFlow();
 		textFlow2.setLayoutManager(new ParagraphTextLayout(textFlow2, ParagraphTextLayout.WORD_WRAP_SOFT));
-		textFlow2.setFont(TAHOMA);
+		textFlow2.setFont(SERIF);
 		figure.add(textFlow2);
 		runGenericTests();
 		runSoftWrappingTests();
@@ -332,12 +332,12 @@ public class TextFlowWrapTest extends BaseTestCase {
 		inline = new InlineFlow();
 		textFlow = new TextFlow();
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_HARD));
-		textFlow.setFont(TAHOMA);
+		textFlow.setFont(SERIF);
 		inline.add(textFlow);
 		figure.add(inline);
 		textFlow2 = new TextFlow();
 		textFlow2.setLayoutManager(new ParagraphTextLayout(textFlow2, ParagraphTextLayout.WORD_WRAP_HARD));
-		textFlow2.setFont(TAHOMA);
+		textFlow2.setFont(SERIF);
 		figure.add(textFlow2);
 		runGenericTests();
 		runHardWrappingTests();
@@ -349,7 +349,7 @@ public class TextFlowWrapTest extends BaseTestCase {
 		figure = new FlowPage();
 		textFlow = new TextFlow();
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_SOFT));
-		textFlow.setFont(TAHOMA);
+		textFlow.setFont(SERIF);
 		figure.add(textFlow);
 		InlineFlow inline = new InlineFlow();
 		figure.add(inline);
@@ -357,7 +357,7 @@ public class TextFlowWrapTest extends BaseTestCase {
 		inline.add(inline2);
 		textFlow2 = new TextFlow();
 		textFlow2.setLayoutManager(new ParagraphTextLayout(textFlow2, ParagraphTextLayout.WORD_WRAP_SOFT));
-		textFlow2.setFont(TAHOMA);
+		textFlow2.setFont(SERIF);
 		inline2.add(textFlow2);
 		runGenericTests();
 		runSoftWrappingTests();
@@ -365,7 +365,7 @@ public class TextFlowWrapTest extends BaseTestCase {
 		figure = new FlowPage();
 		textFlow = new TextFlow();
 		textFlow.setLayoutManager(new ParagraphTextLayout(textFlow, ParagraphTextLayout.WORD_WRAP_HARD));
-		textFlow.setFont(TAHOMA);
+		textFlow.setFont(SERIF);
 		figure.add(textFlow);
 		inline = new InlineFlow();
 		figure.add(inline);
@@ -373,11 +373,18 @@ public class TextFlowWrapTest extends BaseTestCase {
 		inline.add(inline2);
 		textFlow2 = new TextFlow();
 		textFlow2.setLayoutManager(new ParagraphTextLayout(textFlow2, ParagraphTextLayout.WORD_WRAP_HARD));
-		textFlow2.setFont(TAHOMA);
+		textFlow2.setFont(SERIF);
 		inline2.add(textFlow2);
 		runGenericTests();
 		runHardWrappingTests();
 		doTest2("def", "def", "defde", new String[] { "def", SAMELINE, "def", TERMINATE }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 
+	@Component
+	public static class BreakIteratorFactoryMock implements BreakIteratorFactory {
+		@Override
+		public BreakIterator newInstance() {
+			return BreakIterator.getLineInstance();
+		}
+	}
 }
