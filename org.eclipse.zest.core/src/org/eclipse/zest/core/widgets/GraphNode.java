@@ -1031,9 +1031,10 @@ public class GraphNode extends GraphItem {
 	 * exist yet.
 	 *
 	 * @return modelFigure.
+	 * @since 2.0
 	 */
 	@Override
-	IFigure getFigure() {
+	public IFigure getFigure() {
 		if (this.modelFigure == null) {
 			initFigure();
 		}

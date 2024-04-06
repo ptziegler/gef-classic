@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.IFigureProvider;
 import org.eclipse.zest.core.viewers.IGraphContentProvider;
-import org.eclipse.zest.core.widgets.CGraphNode;
 import org.eclipse.zest.core.widgets.GraphNode;
+import org.eclipse.zest.core.widgets.custom.CGraphNode;
 
 import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.Ellipse;

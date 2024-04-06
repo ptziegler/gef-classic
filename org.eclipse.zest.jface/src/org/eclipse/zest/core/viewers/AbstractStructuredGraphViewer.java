@@ -26,7 +26,6 @@ import org.eclipse.swt.SWTError;
 import org.eclipse.swt.widgets.Widget;
 
 import org.eclipse.zest.core.viewers.internal.IStylingGraphModelFactory;
-import org.eclipse.zest.core.widgets.CGraphNode;
 import org.eclipse.zest.core.widgets.ConstraintAdapter;
 import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphConnection;
@@ -35,6 +34,7 @@ import org.eclipse.zest.core.widgets.GraphItem;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.core.widgets.IContainer;
 import org.eclipse.zest.core.widgets.ZestStyles;
+import org.eclipse.zest.core.widgets.custom.CGraphNode;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutRelationship;
 
