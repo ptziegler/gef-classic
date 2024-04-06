@@ -365,6 +365,7 @@
 		<module>org.eclipse.gef.examples.ui.capabilities</module>
 		<module>org.eclipse.gef.examples.ui.pde</module>
 		<module>org.eclipse.zest.examples</module>
+		<module>org.eclipse.zest.examples.layouts</module>
 		
 	
 	<!--features-->

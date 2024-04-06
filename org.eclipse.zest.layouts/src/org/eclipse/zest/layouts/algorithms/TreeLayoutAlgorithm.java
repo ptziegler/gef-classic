@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005, 2023 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada, Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +24,6 @@ import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.dataStructures.DisplayIndependentRectangle;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
-import org.eclipse.zest.layouts.exampleStructures.SimpleRelationship;
 
 /**
  * The TreeLayoutAlgorithm class implements a simple algorithm to arrange graph
@@ -182,7 +181,6 @@ public class TreeLayoutAlgorithm extends AbstractLayoutAlgorithm {
 	 * @param entity The node that concerns the relations to be found.
 	 * @param role   The role played by the <code>obj</code>. Its type must be of
 	 *               <code>ACTOR_ROLE</code> or <code>ACTEE_ROLE</code>.
-	 * @see SimpleRelationship
 	 */
 	private static Collection<InternalRelationship> findRelationships(Object entity, boolean objectAsSource,
 			InternalRelationship[] relationshipsToConsider) {
@@ -205,9 +203,6 @@ public class TreeLayoutAlgorithm extends AbstractLayoutAlgorithm {
 	 * @param obj  The node that concerns the relations to be found.
 	 * @param role The role played by the <code>obj</code>. Its type must be of
 	 *             <code>ACTOR_ROLE</code> or <code>ACTEE_ROLE</code>.
-	 * @see SimpleRelationship
-	 * @see SimpleRelationship#ACTOR_ROLE
-	 * @see SimpleRelationship#ACTEE_ROLE
 	 */
 	private static InternalRelationship findRelationship(Object entity, boolean objectAsSource,
 			InternalRelationship[] relationshipsToConsider) {

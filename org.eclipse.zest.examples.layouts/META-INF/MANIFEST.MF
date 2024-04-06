@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Plugin.name
+Bundle-SymbolicName: org.eclipse.zest.examples.layouts;singleton:=true
+Bundle-Vendor: %Plugin.providerName
+Bundle-Version: 2.0.0.qualifier
+Automatic-Module-Name: org.eclipse.zest.examples.layouts
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: org.eclipse.zest.layouts.exampleStructures,
+ org.eclipse.zest.layouts.exampleUses
+Require-Bundle: org.eclipse.zest.layouts,
+ org.eclipse.core.runtime,
+ org.eclipse.ui
