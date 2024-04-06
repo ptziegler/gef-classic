@@ -24,13 +24,14 @@ import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
  * This layout shifts overlapping nodes to the right.
  *
  * @author Ian Bull
+ * @since 2.0
  */
-public class HorizontalShift extends AbstractLayoutAlgorithm {
+public class HorizontalShiftAlgorithm extends AbstractLayoutAlgorithm {
 
 	private static final double DELTA = 10;
 	private static final double VSPACING = 2;
 
-	public HorizontalShift(int styles) {
+	public HorizontalShiftAlgorithm(int styles) {
 		super(styles);
 	}
 

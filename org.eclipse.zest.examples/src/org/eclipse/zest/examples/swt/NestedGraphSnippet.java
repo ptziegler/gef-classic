@@ -27,7 +27,7 @@ import org.eclipse.zest.layouts.LayoutAlgorithm;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.HorizontalShift;
+import org.eclipse.zest.layouts.algorithms.HorizontalShiftAlgorithm;
 import org.eclipse.zest.layouts.algorithms.RadialLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 
@@ -119,7 +119,7 @@ public class NestedGraphSnippet {
 		CompositeLayoutAlgorithm compositeLayoutAlgorithm = new CompositeLayoutAlgorithm(
 				LayoutStyles.NO_LAYOUT_NODE_RESIZING,
 				new LayoutAlgorithm[] { new GridLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING),
-						new HorizontalShift(LayoutStyles.NO_LAYOUT_NODE_RESIZING) });
+						new HorizontalShiftAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING) });
 		// g.setLayoutAlgorithm(new
 		// GridLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING), true);
 		g.setLayoutAlgorithm(compositeLayoutAlgorithm, true);
