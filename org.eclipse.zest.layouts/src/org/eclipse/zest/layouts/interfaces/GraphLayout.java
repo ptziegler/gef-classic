@@ -10,17 +10,21 @@
  *
  * Contributors: The Chisel Group, University of Victoria
  *******************************************************************************/
-package org.eclipse.zest.layouts;
+package org.eclipse.zest.layouts.interfaces;
 
 import java.util.List;
+
+import org.eclipse.zest.layouts.LayoutEntity;
+import org.eclipse.zest.layouts.LayoutRelationship;
 
 /**
  * The LayoutGraph interface defines the methods used to add nodes and edges
  * (relationships).
  *
  * @author Chris
+ * @since 2.0
  */
-public interface LayoutGraph {
+public interface GraphLayout {
 
 	/**
 	 * Adds a node to this graph.

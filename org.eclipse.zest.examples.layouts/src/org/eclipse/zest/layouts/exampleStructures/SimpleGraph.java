@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.zest.layouts.LayoutEntity;
-import org.eclipse.zest.layouts.LayoutGraph;
 import org.eclipse.zest.layouts.LayoutRelationship;
+import org.eclipse.zest.layouts.interfaces.GraphLayout;
 
 /**
  * Create a very simple graph that can be used in the layout algorithms
@@ -28,7 +28,7 @@ import org.eclipse.zest.layouts.LayoutRelationship;
  * @author Casey Best
  * @author Chris Callendar
  */
-public class SimpleGraph implements LayoutGraph {
+public class SimpleGraph implements GraphLayout {
 
 	Map objectsToNodes;
 	List relationships;
