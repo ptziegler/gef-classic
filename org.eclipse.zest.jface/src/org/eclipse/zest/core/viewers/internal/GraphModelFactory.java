@@ -12,6 +12,7 @@
  ******************************************************************************/
 package org.eclipse.zest.core.viewers.internal;
 
+import org.eclipse.zest.core.viewers.AbstractStructuredGraphViewer;
 import org.eclipse.zest.core.viewers.IFigureProvider;
 import org.eclipse.zest.core.viewers.IGraphContentProvider;
 import org.eclipse.zest.core.widgets.Graph;
