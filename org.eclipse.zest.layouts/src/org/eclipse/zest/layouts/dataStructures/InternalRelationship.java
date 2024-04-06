@@ -15,11 +15,11 @@ package org.eclipse.zest.layouts.dataStructures;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.zest.layouts.LayoutBendPoint;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.constraints.BasicEdgeConstraints;
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
+import org.eclipse.zest.layouts.interfaces.BendPointLayout;
 
 /**
  * @author Ian Bull
@@ -125,7 +125,7 @@ public class InternalRelationship implements LayoutRelationship {
 	}
 
 	@Override
-	public void setBendPoints(LayoutBendPoint[] bendPoints) {
+	public void setBendPoints(BendPointLayout[] bendPoints) {
 		// TODO Auto-generated method stub
 
 	}

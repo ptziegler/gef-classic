@@ -13,6 +13,7 @@
 package org.eclipse.zest.layouts;
 
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
+import org.eclipse.zest.layouts.interfaces.BendPointLayout;
 
 /**
  * This represents a single relationship, providing the layout algorithms with a
@@ -68,8 +69,9 @@ public interface LayoutRelationship extends LayoutItem {
 	 *                   point for this relationship. This allows the correct
 	 *                   positioning of bendpoints relative to the source and
 	 *                   destination points when drawing the graph.
+	 * @since 2.0
 	 */
-	public void setBendPoints(LayoutBendPoint[] bendPoints);
+	public void setBendPoints(BendPointLayout[] bendPoints);
 
 	/**
 	 * Clear bend points and related bounds If you are updating an existing

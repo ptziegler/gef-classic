@@ -15,13 +15,13 @@ package org.eclipse.zest.layouts.exampleStructures;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.zest.layouts.LayoutBendPoint;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.constraints.BasicEdgeConstraints;
 import org.eclipse.zest.layouts.constraints.LabelLayoutConstraint;
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
 import org.eclipse.zest.layouts.dataStructures.BendPoint;
+import org.eclipse.zest.layouts.interfaces.BendPointLayout;
 
 /**
  * The SimpleRelation class describes the relationship between two objects:
@@ -75,7 +75,7 @@ public class SimpleRelationship implements LayoutRelationship {
 
 	private Object internalRelationship;
 
-	private LayoutBendPoint[] bendPoints;
+	private BendPointLayout[] bendPoints;
 
 	private String label;
 
@@ -246,11 +246,11 @@ public class SimpleRelationship implements LayoutRelationship {
 	}
 
 	@Override
-	public void setBendPoints(LayoutBendPoint[] bendPoints) {
+	public void setBendPoints(BendPointLayout[] bendPoints) {
 		this.bendPoints = bendPoints;
 	}
 
-	public LayoutBendPoint[] getBendPoints() {
+	public BendPointLayout[] getBendPoints() {
 		return this.bendPoints;
 	}
 

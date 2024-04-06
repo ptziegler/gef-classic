@@ -19,10 +19,10 @@ import org.eclipse.zest.core.widgets.internal.LoopAnchor;
 import org.eclipse.zest.core.widgets.internal.PolylineArcConnection;
 import org.eclipse.zest.core.widgets.internal.RoundedChopboxAnchor;
 import org.eclipse.zest.core.widgets.internal.ZestRootLayer;
-import org.eclipse.zest.layouts.LayoutBendPoint;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
+import org.eclipse.zest.layouts.interfaces.BendPointLayout;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
@@ -746,14 +746,14 @@ public class GraphConnection extends GraphItem {
 		}
 
 		@Override
-		public void setBendPoints(LayoutBendPoint[] bendPoints) {
+		public void setBendPoints(BendPointLayout[] bendPoints) {
 			PointList points = new PointList();
 
 			// source
 			points.addPoint(getSource().getLocation().x + getSource().getSize().width / 2,
 					getSource().getLocation().y + getSource().getSize().height / 2);
 			// bend points
-			for (LayoutBendPoint p : bendPoints) {
+			for (BendPointLayout p : bendPoints) {
 				if (p.getIsControlPoint()) {
 					points.addPoint(new PrecisionPoint(p.getX(), p.getY()));
 				}

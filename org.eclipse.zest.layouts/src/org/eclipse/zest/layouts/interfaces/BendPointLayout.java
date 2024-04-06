@@ -9,15 +9,16 @@
  *
  * Contributors: The Chisel Group, University of Victoria
  *******************************************************************************/
-package org.eclipse.zest.layouts;
+package org.eclipse.zest.layouts.interfaces;
 
 /**
  * Specifies a single bend point in a graph relationship.
  *
  * @author Ian Bull
  * @author Chris Bennett
+ * @since 2.0
  */
-public interface LayoutBendPoint {
+public interface BendPointLayout {
 	public double getX();
 
 	public double getY();

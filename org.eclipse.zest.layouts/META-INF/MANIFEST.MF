@@ -10,6 +10,7 @@ Export-Package: org.eclipse.zest.layouts,
  org.eclipse.zest.layouts.algorithms.internal,
  org.eclipse.zest.layouts.constraints,
  org.eclipse.zest.layouts.dataStructures,
+ org.eclipse.zest.layouts.interfaces,
  org.eclipse.zest.layouts.progress
 Require-Bundle: org.eclipse.swt;bundle-version="[3.4.0,4.0.0)";visibility:=reexport,
  org.eclipse.draw2d

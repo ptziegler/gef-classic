@@ -41,7 +41,6 @@ import java.util.List;
 
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
-import org.eclipse.zest.layouts.LayoutBendPoint;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.LayoutStyles;
@@ -54,6 +53,7 @@ import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.VerticalLayoutAlgorithm;
 import org.eclipse.zest.layouts.exampleStructures.SimpleNode;
 import org.eclipse.zest.layouts.exampleStructures.SimpleRelationship;
+import org.eclipse.zest.layouts.interfaces.BendPointLayout;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
 
@@ -670,7 +670,7 @@ public class SimpleSwingExample {
 		 */
 		private void drawBendPoints(LayoutRelationship rel, Graphics g) {
 			final String DUMMY_TITLE = "dummy";
-			LayoutBendPoint bp;
+			BendPointLayout bp;
 
 			SimpleNode startEntity = (SimpleNode) rel.getSourceInLayout();
 			SimpleNode destEntity = (SimpleNode) rel.getDestinationInLayout();
@@ -678,7 +678,7 @@ public class SimpleSwingExample {
 			double srcY = startEntity.getY();
 
 			// Transform the bendpoints to this coordinate system
-			LayoutBendPoint[] bendPoints = ((SimpleRelationship) rel).getBendPoints();
+			BendPointLayout[] bendPoints = ((SimpleRelationship) rel).getBendPoints();
 
 			srcX = bendPoints[1].getX();
 			srcY = bendPoints[1].getY();

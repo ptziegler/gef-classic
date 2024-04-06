@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.eclipse.zest.layouts.dataStructures;
 
-import org.eclipse.zest.layouts.LayoutBendPoint;
+import org.eclipse.zest.layouts.interfaces.BendPointLayout;
 
 /**
  * Implements a single bend point in a graph relationship.
@@ -19,7 +19,7 @@ import org.eclipse.zest.layouts.LayoutBendPoint;
  * @author Ian Bull
  * @author Chris Bennett
  */
-public class BendPoint extends DisplayIndependentPoint implements LayoutBendPoint {
+public class BendPoint extends DisplayIndependentPoint implements BendPointLayout {
 
 	private boolean isControlPoint = false; // is this a control point (for use in curves)
 
