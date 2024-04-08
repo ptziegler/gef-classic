@@ -10,9 +10,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.zest.core.viewers.internal;
+package org.eclipse.zest.core.widgets.zooming;
 
 import java.util.ArrayList;
+
+import org.eclipse.zest.core.widgets.internal.SharedMessages;
 
 import org.eclipse.draw2d.ScalableFigure;
 import org.eclipse.draw2d.Viewport;
@@ -39,6 +41,7 @@ import org.eclipse.draw2d.Viewport;
  *
  * @author Dan Lee
  * @author Eric Bordeau
+ * @since 2.0
  */
 @SuppressWarnings("javadoc") // GEF is not in classpath
 public class ZoomManager extends org.eclipse.draw2d.zoom.AbstractZoomManager {

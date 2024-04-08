@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.zest.core.viewers.internal.ZoomManager;
+import org.eclipse.zest.core.widgets.zooming.ZoomManager;
 
 import org.eclipse.draw2d.zoom.ZoomListener;
 
