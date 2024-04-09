@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005, 2023 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada, Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +19,12 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.zest.layouts.Filter;
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.LayoutAlgorithm.LayoutAlgorithm2;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutItem;
 import org.eclipse.zest.layouts.LayoutRelationship;
@@ -35,6 +37,7 @@ import org.eclipse.zest.layouts.dataStructures.DisplayIndependentPoint;
 import org.eclipse.zest.layouts.dataStructures.DisplayIndependentRectangle;
 import org.eclipse.zest.layouts.dataStructures.InternalNode;
 import org.eclipse.zest.layouts.dataStructures.InternalRelationship;
+import org.eclipse.zest.layouts.interfaces.LayoutContext;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
 
@@ -50,8 +53,10 @@ import org.eclipse.zest.layouts.progress.ProgressListener;
  * @author Chris Callendar
  * @author Rob Lintern
  * @author Chris Bennett
+ * @deprecated Implement {@link LayoutAlgorithm} directly
  */
-public abstract class AbstractLayoutAlgorithm implements LayoutAlgorithm, Stoppable {
+@Deprecated(since = "2.0", forRemoval = true)
+public abstract class AbstractLayoutAlgorithm implements LayoutAlgorithm, LayoutAlgorithm2, Stoppable {
 
 	public void removeRelationships(Collection<? extends LayoutRelationship> collection) {
 
@@ -113,6 +118,10 @@ public abstract class AbstractLayoutAlgorithm implements LayoutAlgorithm, Stoppa
 
 	// Child classes can set to false to retain node shapes and sizes
 	protected boolean resizeEntitiesAfterLayout = true;
+	/**
+	 * @since 2.0
+	 */
+	protected LayoutContext context;
 
 	/**
 	 * Initializes the abstract layout algorithm.
@@ -125,6 +134,11 @@ public abstract class AbstractLayoutAlgorithm implements LayoutAlgorithm, Stoppa
 		this.widthToHeightRatio = 1.0;
 
 		this.layout_styles = styles;
+	}
+
+	@Override
+	public void setLayoutContext(LayoutContext context) {
+		this.context = context;
 	}
 
 	/**
@@ -221,6 +235,20 @@ public abstract class AbstractLayoutAlgorithm implements LayoutAlgorithm, Stoppa
 	 * @param continuous
 	 */
 	protected abstract boolean isValidConfiguration(boolean asynchronous, boolean continuous);
+
+	@Override
+	public void applyLayout(boolean clean) {
+		try {
+			Objects.requireNonNull(context, "Internal Error: LayoutContext has not been set."); //$NON-NLS-1$
+			LayoutEntity[] entitiesToLayout = (LayoutEntity[]) context.getEntities();
+			LayoutRelationship[] relationshipsToConsider = (LayoutRelationship[]) context.getConnections();
+			DisplayIndependentRectangle bounds = context.getBounds();
+			applyLayout(entitiesToLayout, relationshipsToConsider, bounds.x, bounds.y, bounds.width, bounds.height,
+					false, false);
+		} catch (InvalidLayoutConfiguration e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Apply the layout to the given entities. The entities will be moved and

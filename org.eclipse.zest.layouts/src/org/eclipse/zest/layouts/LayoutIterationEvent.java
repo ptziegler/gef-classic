@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,9 @@ import java.util.List;
  * allows the application to update the GUI to represent the new locations
  *
  * @author Casey Best and Rob Lintern
+ * @deprecated This event was never used in 1.x
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public class LayoutIterationEvent {
 	private List relationshipsToLayout, entitiesToLayout;
 	private int iterationCompleted;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2006, CHISEL Group, University of Victoria, Victoria, BC, Canada.
+ * Copyright 2006, 2024 CHISEL Group, University of Victoria, Victoria, BC, Canada.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -35,8 +35,12 @@ public class CompositeLayoutAlgorithm extends AbstractLayoutAlgorithm {
 
 		for (LayoutAlgorithm algorithm : algorithms) {
 			try {
-				algorithm.applyLayout(entitiesToLayout, relationshipsToConsider, boundsX, boundsY, boundsWidth,
-						boundsHeight, this.internalAsynchronous, this.internalContinuous);
+				if (algorithm instanceof LayoutAlgorithm2 algorithm2) {
+					algorithm2.applyLayout(entitiesToLayout, relationshipsToConsider, boundsX, boundsY, boundsWidth,
+							boundsHeight, this.internalAsynchronous, this.internalContinuous);
+				} else {
+					algorithm.applyLayout(true);
+				}
 			} catch (InvalidLayoutConfiguration e) {
 				e.printStackTrace();
 			}

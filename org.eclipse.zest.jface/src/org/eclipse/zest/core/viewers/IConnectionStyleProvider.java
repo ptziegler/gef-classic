@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005-2006, 2024 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005-2010, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.ui.services.IDisposable;
 
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.IFigure;
 
 /**
@@ -75,4 +76,12 @@ public interface IConnectionStyleProvider extends IDisposable {
 	 * @param entity
 	 */
 	public IFigure getTooltip(Object entity);
+
+	/**
+	 * Returns the connection router of the single relation.
+	 *
+	 * @param rel the relationship represented by this connection.
+	 * @return the connection router for rel. Null for default.
+	 */
+	public ConnectionRouter getRouter(Object rel);
 }

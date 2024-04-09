@@ -40,7 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
-import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.LayoutAlgorithm.LayoutAlgorithm2;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.LayoutStyles;
@@ -93,7 +93,7 @@ public class SimpleSwingExample {
 	public static HorizontalLayoutAlgorithm HORIZ = new HorizontalLayoutAlgorithm(LayoutStyles.NONE);
 	public static VerticalLayoutAlgorithm VERT = new VerticalLayoutAlgorithm(LayoutStyles.NONE);
 
-	private final List algorithms = new ArrayList();
+	private final List<LayoutAlgorithm2> algorithms = new ArrayList<>();
 	private final List algorithmNames = new ArrayList();
 
 	private static final int INITIAL_PANEL_WIDTH = 700;
@@ -126,7 +126,7 @@ public class SimpleSwingExample {
 	private JToggleButton btnAsynchronous;
 	private JButton btnStop;
 
-	private LayoutAlgorithm currentLayoutAlgorithm;
+	private LayoutAlgorithm2 currentLayoutAlgorithm;
 	protected String currentLayoutAlgorithmName;
 	protected SimpleNode selectedEntity;
 	protected Point mouseDownPoint;
@@ -138,7 +138,7 @@ public class SimpleSwingExample {
 
 	}
 
-	protected void addAlgorithm(LayoutAlgorithm algorithm, String name, boolean animate) {
+	protected void addAlgorithm(LayoutAlgorithm2 algorithm, String name, boolean animate) {
 		algorithms.add(algorithm);
 		algorithmNames.add(name);
 	}
@@ -222,7 +222,7 @@ public class SimpleSwingExample {
 				addAlgorithm(VERT, "Vert", false);
 
 				for (int i = 0; i < algorithms.size(); i++) {
-					final LayoutAlgorithm algorithm = (LayoutAlgorithm) algorithms.get(i);
+					final LayoutAlgorithm2 algorithm = algorithms.get(i);
 					final String algorithmName = (String) algorithmNames.get(i);
 					// final boolean algorithmAnimate =
 					// ((Boolean)algorithmAnimates.get(i)).booleanValue();

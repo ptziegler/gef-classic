@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -13,6 +13,7 @@
 package org.eclipse.zest.layouts;
 
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
+import org.eclipse.zest.layouts.interfaces.NodeLayout;
 
 /**
  * This represents a single entity, providing the layout algorithms with a
@@ -21,7 +22,9 @@ import org.eclipse.zest.layouts.constraints.LayoutConstraint;
  * @author Casey Best
  * @author Ian Bull
  * @author Chris Bennett
+ * @deprecated Use {@link NodeLayout} instead.
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public interface LayoutEntity extends Comparable, LayoutItem {
 
 	public final static String ATTR_PREFERRED_WIDTH = "tree-preferred-width";

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005-2010, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+import org.eclipse.zest.core.widgets.IStyleableFigure;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
@@ -33,7 +35,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
  *
  * @author Chris Callendar
  */
-public class GraphLabel extends CachedLabel {
+public class GraphLabel extends CachedLabel implements IStyleableFigure {
 
 	private Color borderColor;
 	private int borderWidth;
@@ -59,7 +61,7 @@ public class GraphLabel extends CachedLabel {
 	 *                   faster, but the
 	 */
 	public GraphLabel(String text, boolean cacheLabel) {
-		this("", null, cacheLabel);
+		this(text, null, cacheLabel);
 	}
 
 	/**
@@ -254,7 +256,7 @@ public class GraphLabel extends CachedLabel {
 	@Override
 	public void setIcon(Image image) {
 		super.setIcon(image);
-		// adjustBoundsToFit();
+		adjustBoundsToFit();
 	}
 
 	public Color getBorderColor() {

@@ -47,11 +47,10 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
-import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.LayoutAlgorithm.LayoutAlgorithm2;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.LayoutStyles;
-import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.HorizontalLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.HorizontalTreeLayoutAlgorithm;
@@ -100,7 +99,7 @@ public class SimpleSWTExample {
 	private static final double INITIAL_NODE_WIDTH = 20;
 	private static final double INITIAL_NODE_HEIGHT = 15;
 
-	protected static ArrayList<AbstractLayoutAlgorithm> algorithms = new ArrayList<>(
+	protected static ArrayList<LayoutAlgorithm2> algorithms = new ArrayList<>(
 			Arrays.asList(new SpringLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING),
 					new TreeLayoutAlgorithm(LayoutStyles.NONE), new HorizontalTreeLayoutAlgorithm(LayoutStyles.NONE),
 					new RadialLayoutAlgorithm(LayoutStyles.NONE), new GridLayoutAlgorithm(LayoutStyles.NONE),
@@ -126,7 +125,7 @@ public class SimpleSWTExample {
 	private final ToolBar toolBar;
 	private final Label lblProgress;
 
-	private LayoutAlgorithm currentLayoutAlgorithm;
+	private LayoutAlgorithm2 currentLayoutAlgorithm;
 	protected SimpleNode selectedEntity;
 	protected SimpleNode hoverEntity;
 
@@ -162,7 +161,7 @@ public class SimpleSWTExample {
 		lblProgress.setText("Progress: "); //$NON-NLS-1$
 
 		for (int i = 0; i < algorithms.size(); i++) {
-			final LayoutAlgorithm algorithm = algorithms.get(i);
+			final LayoutAlgorithm2 algorithm = algorithms.get(i);
 			String algorithmName = algorithmNames.get(i);
 			final boolean algorithmAnimate = algorithmAnimates.get(i).booleanValue();
 			ToolItem algorithmButton = new ToolItem(toolBar, SWT.PUSH);

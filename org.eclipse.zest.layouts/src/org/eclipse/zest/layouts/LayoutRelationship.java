@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -14,6 +14,7 @@ package org.eclipse.zest.layouts;
 
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
 import org.eclipse.zest.layouts.interfaces.BendPointLayout;
+import org.eclipse.zest.layouts.interfaces.ConnectionLayout;
 
 /**
  * This represents a single relationship, providing the layout algorithms with a
@@ -21,7 +22,9 @@ import org.eclipse.zest.layouts.interfaces.BendPointLayout;
  *
  * @author Casey Best
  * @author Chris Callendar
+ * @deprecated Use {@link ConnectionLayout instead}.
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public interface LayoutRelationship extends LayoutItem {
 
 	/**

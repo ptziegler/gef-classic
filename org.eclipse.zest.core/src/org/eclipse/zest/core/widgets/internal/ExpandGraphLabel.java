@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005-2006, CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005-2006, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +41,7 @@ public class ExpandGraphLabel extends Figure implements ActionListener {
 	public static final int CLOSED = 2;
 	private int state = CLOSED;
 	private Expander expander = null;
+	private Color darkerBackground;
 
 	class Expander extends Clickable {
 		private Triangle triangle;
@@ -182,6 +183,17 @@ public class ExpandGraphLabel extends Figure implements ActionListener {
 		}
 	}
 
+	private Color getDarkerBackgroundColor() {
+		if (darkerBackground == null) {
+			Color baseColor = getBackgroundColor();
+			int blue = (int) (baseColor.getBlue() * 0.8 + 0.5);
+			int red = (int) (baseColor.getRed() * 0.8 + 0.5);
+			int green = (int) (baseColor.getGreen() * 0.8 + 0.5);
+			darkerBackground = new Color(Display.getCurrent(), new RGB(red, green, blue));
+		}
+		return darkerBackground;
+	}
+
 	private Image getIcon() {
 		return this.label.getIcon();
 	}
@@ -198,20 +210,7 @@ public class ExpandGraphLabel extends Figure implements ActionListener {
 	@Override
 	public void paint(Graphics graphics) {
 
-		int blue = getBackgroundColor().getBlue();
-		blue = (int) (blue - (blue * 0.20));
-		blue = blue > 0 ? blue : 0;
-
-		int red = getBackgroundColor().getRed();
-		red = (int) (red - (red * 0.20));
-		red = red > 0 ? red : 0;
-
-		int green = getBackgroundColor().getGreen();
-		green = (int) (green - (green * 0.20));
-		green = green > 0 ? green : 0;
-
-		Color lightenColor = new Color(Display.getCurrent(), new RGB(red, green, blue));
-		graphics.setForegroundColor(lightenColor);
+		graphics.setForegroundColor(getDarkerBackgroundColor());
 		graphics.setBackgroundColor(getBackgroundColor());
 
 		graphics.pushState();
@@ -235,24 +234,33 @@ public class ExpandGraphLabel extends Figure implements ActionListener {
 		top.y = top.y + top.height;
 		// graphics.setForegroundColor(getBackgroundColor());
 		// graphics.setBackgroundColor(getBackgroundColor());
-		graphics.setForegroundColor(lightenColor);
-		graphics.setBackgroundColor(lightenColor);
+		graphics.setForegroundColor(darkerBackground);
+		graphics.setBackgroundColor(darkerBackground);
 		graphics.fillRoundRectangle(top, arcWidth, arcWidth);
 
 		// graphics.setForegroundColor(lightenColor);
 		// graphics.setBackgroundColor(getBackgroundColor());
-		graphics.setBackgroundColor(lightenColor);
+		graphics.setBackgroundColor(darkerBackground);
 		graphics.setForegroundColor(getBackgroundColor());
 		graphics.fillGradient(r, true);
 
 		super.paint(graphics);
 		graphics.popState();
-		graphics.setForegroundColor(lightenColor);
-		graphics.setBackgroundColor(lightenColor);
+		graphics.setForegroundColor(darkerBackground);
+		graphics.setBackgroundColor(darkerBackground);
 		// paint the border
 		bounds.setSize(bounds.width - 1, bounds.height - 1);
 		graphics.drawRoundRectangle(bounds, arcWidth, arcWidth);
-		lightenColor.dispose();
+		darkerBackground.dispose();
+	}
+
+	@Override
+	public void setBackgroundColor(Color bg) {
+		super.setBackgroundColor(bg);
+		if (darkerBackground != null) {
+			darkerBackground.dispose();
+		}
+		darkerBackground = null;
 	}
 
 //	public Dimension getPreferredSize(int hint, int hint2) {
@@ -292,6 +300,10 @@ public class ExpandGraphLabel extends Figure implements ActionListener {
 	public void setBounds(Rectangle rect) {
 		// TODO Auto-generated method stub
 		super.setBounds(rect);
+	}
+
+	public void setFocus() {
+		expander.requestFocus();
 	}
 
 }

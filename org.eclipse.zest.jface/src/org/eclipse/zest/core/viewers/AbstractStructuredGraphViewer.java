@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005-2011, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -8,7 +8,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
- * Contributors: The Chisel Group, University of Victoria
+ * Contributors: The Chisel Group, University of Victoria Mateusz Matela
+ * <mateusz.matela@gmail.com> - Adapt Zest to changes in layout -
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?id=283179
  ******************************************************************************/
 package org.eclipse.zest.core.viewers;
 
@@ -36,9 +38,11 @@ import org.eclipse.zest.core.widgets.IContainer;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.core.widgets.custom.CGraphNode;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.LayoutAlgorithm.LayoutAlgorithm2;
 import org.eclipse.zest.layouts.LayoutRelationship;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Point;
 
 /**
  * Abstraction of graph viewers to implement functionality used by all of them.
@@ -274,6 +278,7 @@ public abstract class AbstractStructuredGraphViewer extends AbstractZoomableView
 	 * @return instance of a {@link GraphNode}
 	 *
 	 * @since 1.7
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	@SuppressWarnings("static-method")
 	protected GraphNode createNodeObject(final Graph graphModel, IFigure figure) {
@@ -290,6 +295,7 @@ public abstract class AbstractStructuredGraphViewer extends AbstractZoomableView
 	 * @return instance of a {@link GraphConnection}
 	 *
 	 * @since 1.7
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	@SuppressWarnings("static-method")
 	protected GraphConnection createConnectionObject(final Graph graphModel, final GraphNode source,
@@ -543,6 +549,10 @@ public abstract class AbstractStructuredGraphViewer extends AbstractZoomableView
 	/**
 	 * Returns the factory used to create the model. This must not be called before
 	 * the content provider is set.
+	 *
+	 * @noreference This method is not intended to be referenced by clients.
+	 * @nooverride This method is not intended to be re-implemented or extended by
+	 *             clients.
 	 */
 	protected abstract IStylingGraphModelFactory getFactory();
 
@@ -636,13 +646,34 @@ public abstract class AbstractStructuredGraphViewer extends AbstractZoomableView
 	@Override
 	public void reveal(Object element) {
 		Widget[] items = this.findItems(element);
+		Point location = null;
 		for (Widget item : items) {
 			if (item instanceof GraphNode graphModelNode) {
 				graphModelNode.highlight();
 			} else if (item instanceof GraphConnection graphModelConnection) {
 				graphModelConnection.highlight();
+				location = getTopLeftBoundary(graphModelConnection.getSource().getLocation(), location);
+				location = getTopLeftBoundary(graphModelConnection.getDestination().getLocation(), location);
 			}
 		}
+		// Scrolling to new location
+		if (location != null) {
+			getGraphControl().scrollSmoothTo(location.x, location.y);
+		}
+	}
+
+	/**
+	 * Calculates the top left corner of the boundary of a single point or two
+	 * points.
+	 *
+	 * @param point1 must not be null
+	 * @param point2 may be null - in that case, point1 is returned
+	 */
+	private static Point getTopLeftBoundary(Point point1, Point point2) {
+		if (point2 != null) {
+			return new Point(Math.min(point1.x, point2.x), Math.min(point1.y, point2.y));
+		}
+		return point1;
 	}
 
 	public void unReveal(Object element) {
@@ -672,8 +703,8 @@ public abstract class AbstractStructuredGraphViewer extends AbstractZoomableView
 
 		if (relationship != null) {
 			// remove the relationship from the layout algorithm
-			if (getLayoutAlgorithm() != null) {
-				getLayoutAlgorithm().removeRelationship(relationship.getLayoutRelationship());
+			if (getLayoutAlgorithm() instanceof LayoutAlgorithm2 layoutAlgorithm2) {
+				layoutAlgorithm2.removeRelationship(relationship.getLayoutRelationship());
 			}
 			// remove the relationship from the model
 			relationship.dispose();
@@ -704,8 +735,8 @@ public abstract class AbstractStructuredGraphViewer extends AbstractZoomableView
 
 		if (node != null) {
 			// remove the node from the layout algorithm and all the connections
-			if (getLayoutAlgorithm() != null) {
-				getLayoutAlgorithm().removeEntity(node.getLayoutEntity());
+			if (getLayoutAlgorithm() instanceof LayoutAlgorithm2 layoutAlgorithm2) {
+				layoutAlgorithm2.removeEntity(node.getLayoutEntity());
 				List<LayoutRelationship> relationships = new ArrayList<>();
 				for (GraphConnection connection : node.getSourceConnections()) {
 					relationships.add(connection.getLayoutRelationship());
@@ -713,7 +744,7 @@ public abstract class AbstractStructuredGraphViewer extends AbstractZoomableView
 				for (GraphConnection connection : node.getTargetConnections()) {
 					relationships.add(connection.getLayoutRelationship());
 				}
-				getLayoutAlgorithm().removeRelationships(relationships);
+				layoutAlgorithm2.removeRelationships(relationships);
 			}
 			// remove the node and it's connections from the model
 			node.dispose();

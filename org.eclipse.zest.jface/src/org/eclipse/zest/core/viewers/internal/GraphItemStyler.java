@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005-2006, CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005-2010, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -29,6 +29,7 @@ import org.eclipse.zest.core.widgets.GraphItem;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.core.widgets.ZestStyles;
 
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.IFigure;
 
 /**
@@ -141,6 +142,10 @@ public class GraphItemStyler {
 		if ((w = provider.getLineWidth(rel)) >= 0) {
 			conn.setLineWidth(w);
 		}
+		ConnectionRouter cr;
+		if ((cr = provider.getRouter(rel)) != null) {
+			conn.setRouter(cr);
+		}
 	}
 
 	/**
@@ -189,6 +194,10 @@ public class GraphItemStyler {
 		int w = -1;
 		if ((w = provider.getLineWidth(src, dest)) >= 0) {
 			conn.setLineWidth(w);
+		}
+		ConnectionRouter cr;
+		if ((cr = provider.getRouter(src, dest)) != null) {
+			conn.setRouter(cr);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,9 @@ package org.eclipse.zest.layouts;
  * the object is filtered.
  *
  * @author Casey Best
+ * @deprecated Use org.eclipse.zest.core.widgets.LayoutFilter
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public interface Filter {
 
 	/**

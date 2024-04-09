@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005, 2023, CHISEL Group, University of Victoria, Victoria, BC, Canada.
+ * Copyright 2005-2010, 2024, CHISEL Group, University of Victoria, Victoria, BC, Canada.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors: The Chisel Group, University of Victoria, Sebastian Hollersbacher
+ *               Mateusz Matela
  ******************************************************************************/
 package org.eclipse.zest.core.widgets;
 
@@ -23,10 +24,13 @@ import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
 import org.eclipse.zest.layouts.interfaces.BendPointLayout;
+import org.eclipse.zest.layouts.interfaces.ConnectionLayout;
+import org.eclipse.zest.layouts.interfaces.NodeLayout;
 
 import org.eclipse.draw2d.ChopboxAnchor;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -81,6 +85,8 @@ public class GraphConnection extends GraphItem {
 	private boolean highlighted;
 	private GraphLayoutConnection layoutConnection = null;
 	private boolean hasCustomTooltip;
+
+	private ConnectionRouter router = null;
 
 	public GraphConnection(Graph graphModel, int style, GraphNode source, GraphNode destination) {
 		super(graphModel, style);
@@ -155,11 +161,7 @@ public class GraphConnection extends GraphItem {
 
 	void removeFigure() {
 		if (connectionFigure.getParent() != null) {
-			if (connectionFigure.getParent() instanceof ZestRootLayer) {
-				((ZestRootLayer) connectionFigure.getParent()).removeConnection(connectionFigure);
-			} else {
-				connectionFigure.getParent().remove(connectionFigure);
-			}
+			connectionFigure.getParent().remove(connectionFigure);
 		}
 		connectionFigure = null;
 		if (sourceContainerConnectionFigure != null) {
@@ -213,7 +215,9 @@ public class GraphConnection extends GraphItem {
 	 * Gets the external connection object.
 	 *
 	 * @return Object
+	 * @deprecated Use {@link #getData()} instead
 	 */
+	@Deprecated(since = "2.0", forRemoval = true)
 	public Object getExternalConnection() {
 		return this.getData();
 	}
@@ -225,7 +229,7 @@ public class GraphConnection extends GraphItem {
 	 */
 	@Override
 	public String toString() {
-		String arrow = (isBidirectionalInLayout() ? " <--> " : " --> ");
+		String arrow = (isDirected() ? " --> " : " <--> ");
 		String src = (sourceNode != null ? sourceNode.getText() : "null");
 		String dest = (destinationNode != null ? destinationNode.getText() : "null");
 		String weight = "  (weight=" + getWeightInLayout() + ")";
@@ -565,6 +569,24 @@ public class GraphConnection extends GraphItem {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	public boolean isDirected() {
+		return ZestStyles.checkStyle(connectionStyle, ZestStyles.CONNECTIONS_DIRECTED);
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	public void setDirected(boolean directed) {
+		if (directed) {
+			setConnectionStyle(connectionStyle | ZestStyles.CONNECTIONS_DIRECTED);
+		} else {
+			setConnectionStyle(connectionStyle & (-1 - ZestStyles.CONNECTIONS_DIRECTED));
+		}
+	}
+
 	PolylineConnection getSourceContainerConnectionFigure() {
 		return (PolylineConnection) sourceContainerConnectionFigure;
 	}
@@ -613,6 +635,9 @@ public class GraphConnection extends GraphItem {
 		if (connection instanceof PolylineArcConnection arcConnection) {
 			arcConnection.setDepth(curveDepth);
 		}
+		if (connectionFigure != null) {
+			applyConnectionRouter(connectionFigure);
+		}
 		if ((connectionStyle & ZestStyles.CONNECTIONS_DIRECTED) > 0) {
 			PolygonDecoration decoration = new PolygonDecoration();
 			if (getLineWidth() < 3) {
@@ -621,7 +646,9 @@ public class GraphConnection extends GraphItem {
 				double logLineWith = getLineWidth() / 2.0;
 				decoration.setScale(7 * logLineWith, 3 * logLineWith);
 			}
-			((PolylineConnection) connection).setTargetDecoration(decoration);
+			if (connection instanceof PolylineConnection polylineConnection) {
+				polylineConnection.setTargetDecoration(decoration);
+			}
 		}
 
 		IFigure toolTip;
@@ -706,16 +733,6 @@ public class GraphConnection extends GraphItem {
 		return cachedConnectionFigure == null ? new PolylineArcConnection() : cachedConnectionFigure;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.mylar.zest.layouts.LayoutRelationship#isBidirectionalInLayout ()
-	 */
-	private boolean isBidirectionalInLayout() {
-		return !ZestStyles.checkStyle(connectionStyle, ZestStyles.CONNECTIONS_DIRECTED);
-	}
-
 	class GraphLayoutConnection implements LayoutRelationship {
 
 		Object layoutInformation = null;
@@ -782,8 +799,90 @@ public class GraphConnection extends GraphItem {
 
 	}
 
+	private InternalConnectionLayout layout;
+
+	InternalConnectionLayout getLayout() {
+		if (layout == null) {
+			layout = new InternalConnectionLayout();
+		}
+		return layout;
+	}
+
+	class InternalConnectionLayout implements ConnectionLayout {
+		private boolean visible = GraphConnection.this.isVisible();
+
+		@Override
+		public NodeLayout getSource() {
+			return sourceNode.getLayout();
+		}
+
+		@Override
+		public NodeLayout getTarget() {
+			return destinationNode.getLayout();
+		}
+
+		@Override
+		public double getWeight() {
+			return GraphConnection.this.getWeightInLayout();
+		}
+
+		@Override
+		public boolean isDirected() {
+			return !ZestStyles.checkStyle(getConnectionStyle(), ZestStyles.CONNECTIONS_DIRECTED);
+		}
+
+		@Override
+		public boolean isVisible() {
+			return visible;
+		}
+
+		@Override
+		public void setVisible(boolean visible) {
+			graphModel.getLayoutContext().checkChangesAllowed();
+			this.visible = visible;
+		}
+
+		void applyLayout() {
+			if (GraphConnection.this.isVisible() != this.visible) {
+				GraphConnection.this.setVisible(this.visible);
+			}
+		}
+	}
+
+	void applyLayoutChanges() {
+		if (layout != null) {
+			layout.applyLayout();
+		}
+	}
+
+	/**
+	 * Applies the connection router with a possible fallback to the default
+	 * connection router to the graph
+	 *
+	 * @param conn
+	 * @since 2.0
+	 */
+	void applyConnectionRouter(Connection conn) {
+		if (router != null) {
+			conn.setConnectionRouter(router);
+		} else if (graphModel.getDefaultConnectionRouter() != null) {
+			conn.setConnectionRouter(graphModel.getDefaultConnectionRouter());
+		}
+	}
+
 	@Override
 	IFigure getFigure() {
 		return this.getConnectionFigure();
 	}
+
+	/**
+	 * Sets the connection router of the connection
+	 *
+	 * @param router
+	 * @since 2.0
+	 */
+	public void setRouter(ConnectionRouter router) {
+		this.router = router;
+	}
+
 }

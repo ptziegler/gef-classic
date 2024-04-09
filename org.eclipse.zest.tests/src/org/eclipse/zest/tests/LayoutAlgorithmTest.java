@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
-import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.LayoutAlgorithm.LayoutAlgorithm2;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class LayoutAlgorithmTest {
-	private LayoutAlgorithm layoutAlgorithm;
+	private LayoutAlgorithm2 layoutAlgorithm;
 	private Set<String> logger;
 
 	@Before

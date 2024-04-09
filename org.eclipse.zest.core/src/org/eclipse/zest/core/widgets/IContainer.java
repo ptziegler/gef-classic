@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005-2007, CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005-2010, 2024, CHISEL Group, University of Victoria, Victoria, BC,
  * 						Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -9,12 +9,18 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors: The Chisel Group, University of Victoria
+ *               Mateusz Matela
  *******************************************************************************/
 package org.eclipse.zest.core.widgets;
 
 import java.util.List;
 
+import org.eclipse.swt.widgets.Widget;
+
 import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.dataStructures.DisplayIndependentRectangle;
+
+import org.eclipse.draw2d.IFigure;
 
 /**
  * This interface describes all Zest components that are Containers. This is an
@@ -26,6 +32,7 @@ import org.eclipse.zest.layouts.LayoutAlgorithm;
  * methods in interfaces.
  *
  * @author Ian Bull
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface IContainer {
 
@@ -52,7 +59,44 @@ public interface IContainer {
 	 */
 	public void setLayoutAlgorithm(LayoutAlgorithm algorithm, boolean applyLayout);
 
-	public List getNodes();
+	public List<? extends GraphNode> getNodes();
+
+	/**
+	 * @since 2.0
+	 */
+	public Widget getItem();
+
+	/**
+	 * Returns list of connections laying inside this container. Only connections
+	 * which both source and target nodes lay directly in this container are
+	 * returned.
+	 *
+	 * @since 2.0
+	 */
+	public List<? extends GraphConnection> getConnections();
+
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 * @param graphNode
+	 */
+	public void addNode(GraphNode graphNode);
+
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 * @param figure
+	 */
+	public void addSubgraphFigure(IFigure figure);
+
+	/**
+	 * @since 2.0
+	 */
+	public DisplayIndependentRectangle getLayoutBounds();
+
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 * @since 2.0
+	 */
+	public InternalLayoutContext getLayoutContext();
 
 	/* protected void highlightNode(GraphNode node); */
 

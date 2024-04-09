@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005-2007, 2023, CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005-2010, 2024, CHISEL Group, University of Victoria, Victoria, BC,
  *                            Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -9,6 +9,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors: The Chisel Group, University of Victoria, Sebastian Hollersbacher
+ *               Mateusz Matela
  ******************************************************************************/
 package org.eclipse.zest.core.widgets;
 
@@ -17,7 +18,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Widget;
 
 import org.eclipse.zest.core.widgets.internal.AspectRatioFreeformLayer;
 import org.eclipse.zest.core.widgets.internal.ContainerFigure;
@@ -25,10 +29,12 @@ import org.eclipse.zest.core.widgets.internal.ExpandGraphLabel;
 import org.eclipse.zest.core.widgets.internal.ZestRootLayer;
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
+import org.eclipse.zest.layouts.LayoutAlgorithm.LayoutAlgorithm2;
 import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.LayoutRelationship;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
+import org.eclipse.zest.layouts.dataStructures.DisplayIndependentRectangle;
 
 import org.eclipse.draw2d.Animation;
 import org.eclipse.draw2d.ColorConstants;
@@ -62,16 +68,19 @@ public class GraphContainer extends GraphNode implements IContainer {
 	private static final int ANIMATION_TIME = 100;
 	private static final int SUBLAYER_OFFSET = 2;
 
+	private static SelectionListener selectionListener;
+
 	private ExpandGraphLabel expandGraphLabel;
 
 	private List<GraphNode> childNodes = null;
 	private int childAreaHeight = CONTAINER_HEIGHT;
 
-	public ZestRootLayer zestLayer;
+	private ZestRootLayer zestLayer;
 	private ScrollPane scrollPane;
 	private LayoutAlgorithm layoutAlgorithm;
 	private boolean isExpanded = false;
 	private AspectRatioFreeformLayer scalledLayer;
+	private InternalLayoutContext layoutContext;
 
 	/**
 	 * Creates a new GraphContainer. A GraphContainer may contain nodes, and has
@@ -85,6 +94,11 @@ public class GraphContainer extends GraphNode implements IContainer {
 
 	}
 
+	/**
+	 * @deprecated Since Zest 2.0, use {@link #GraphContainer(Graph, int)},
+	 *             {@link #setText(String)}, and {@link #setImage(Image)}
+	 */
+	@Deprecated
 	public GraphContainer(IContainer graph, int style, String text) {
 		this(graph, style, text, null);
 
@@ -95,6 +109,7 @@ public class GraphContainer extends GraphNode implements IContainer {
 		initModel(graph, text, image);
 		close(false);
 		childNodes = new ArrayList<>();
+		registerToParent(graph);
 	}
 
 	/**
@@ -521,11 +536,20 @@ public class GraphContainer extends GraphNode implements IContainer {
 	}
 
 	/**
+	 * @since 2.0
+	 */
+	@Override
+	public Widget getItem() {
+		return this;
+	}
+
+	/**
 	 *
 	 */
 	@Override
 	public void setLayoutAlgorithm(LayoutAlgorithm algorithm, boolean applyLayout) {
 		this.layoutAlgorithm = algorithm;
+		this.layoutAlgorithm.setLayoutContext(getLayoutContext());
 		if (applyLayout) {
 			applyLayout();
 		}
@@ -537,6 +561,27 @@ public class GraphContainer extends GraphNode implements IContainer {
 	 */
 	public LayoutAlgorithm getLayoutAlgorithm() {
 		return this.layoutAlgorithm;
+	}
+
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	@Override
+	public InternalLayoutContext getLayoutContext() {
+		if (layoutContext == null) {
+			layoutContext = new InternalLayoutContext(this);
+		}
+		return layoutContext;
+	}
+
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	public DisplayIndependentRectangle getLayoutBounds() {
+		double width = GraphContainer.SCALED_WIDTH - 10;
+		double height = GraphContainer.SCALED_HEIGHT - 10;
+		return new DisplayIndependentRectangle(25, 25, width - 50, height - 50);
 	}
 
 	@Override
@@ -552,34 +597,41 @@ public class GraphContainer extends GraphNode implements IContainer {
 		}
 
 		if (layoutAlgorithm == null) {
-			layoutAlgorithm = new TreeLayoutAlgorithm(layoutStyle);
+			setLayoutAlgorithm(new TreeLayoutAlgorithm(layoutStyle), false);
 		}
 
-		layoutAlgorithm.setStyle(layoutAlgorithm.getStyle() | layoutStyle);
-
-		// calculate the size for the layout algorithm
-		// Dimension d = this.scalledLayer.getSize();
-		Dimension d = new Dimension();
-		d.width = (int) SCALED_WIDTH;
-		d.height = (int) SCALED_HEIGHT;
-
-		d.width = d.width - 10;
-		d.height = d.height - 10;
-		// if (d.height <= 0) {
-		// d.height = (CONTAINER_HEIGHT);
-		// }
-		// d.scale(1 / this.scalledLayer.getScale());
-
-		if (d.isEmpty()) {
-			return;
+		if (layoutAlgorithm instanceof LayoutAlgorithm2 layoutAlgorithm2) {
+			layoutAlgorithm2.setStyle(layoutAlgorithm2.getStyle() | layoutStyle);
 		}
-		LayoutRelationship[] connectionsToLayout = getGraph().getConnectionsToLayout(getNodes());
-		LayoutEntity[] nodesToLayout = getGraph().getNodesToLayout(getNodes());
 
 		try {
 			Animation.markBegin();
-			layoutAlgorithm.applyLayout(nodesToLayout, connectionsToLayout, 25, 25, d.width - 50, d.height - 50, false,
-					false);
+			if (layoutAlgorithm instanceof LayoutAlgorithm2 layoutAlgorithm2) {
+
+				// calculate the size for the layout algorithm
+				// Dimension d = this.scalledLayer.getSize();
+				Dimension d = new Dimension();
+				d.width = (int) SCALED_WIDTH;
+				d.height = (int) SCALED_HEIGHT;
+
+				d.width = d.width - 10;
+				d.height = d.height - 10;
+				// if (d.height <= 0) {
+				// d.height = (CONTAINER_HEIGHT);
+				// }
+				// d.scale(1 / this.scalledLayer.getScale());
+
+				if (d.isEmpty()) {
+					return;
+				}
+				LayoutRelationship[] connectionsToLayout = getGraph().getConnectionsToLayout(getNodes());
+				LayoutEntity[] nodesToLayout = getGraph().getNodesToLayout(getNodes());
+				layoutAlgorithm2.applyLayout(nodesToLayout, connectionsToLayout, 25, 25, d.width - 50, d.height - 50,
+						false, false);
+			} else {
+				layoutAlgorithm.applyLayout(true);
+			}
+			layoutContext.flushChanges(false);
 			Animation.run(ANIMATION_TIME);
 			getFigure().getUpdateManager().performUpdate();
 
@@ -768,9 +820,41 @@ public class GraphContainer extends GraphNode implements IContainer {
 		return containerFigure;
 	}
 
+	private static void registerToParent(IContainer parent) {
+		if (parent.getItemType() == GRAPH) {
+			createSelectionListener();
+			parent.getGraph().addSelectionListener(selectionListener);
+		}
+	}
+
+	private static void createSelectionListener() {
+		if (selectionListener == null) {
+			selectionListener = new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (e.item instanceof GraphContainer) {
+						// set focus to expand label so that pressing space
+						// opens/closes
+						// the last selected container
+						((GraphContainer) e.item).expandGraphLabel.setFocus();
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// ignore
+				}
+			};
+
+		}
+	}
+
 	@Override
 	protected void updateFigureForModel(IFigure currentFigure) {
 
+		if (expandGraphLabel == null) {
+			initFigure();
+		}
 		expandGraphLabel.setTextT(getText());
 		expandGraphLabel.setImage(getImage());
 		expandGraphLabel.setFont(getFont());
@@ -849,22 +933,40 @@ public class GraphContainer extends GraphNode implements IContainer {
 		}
 	}
 
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	@Override
+	public void addSubgraphFigure(IFigure figure) {
+		zestLayer.addSubgraph(figure);
+		graph.subgraphFigures.add(figure);
+	}
+
 	void addConnectionFigure(PolylineConnection connection) {
 		getModelFigure().add(connection);
 		// zestLayer.addConnection(connection);
 	}
 
-	void addNode(GraphNode node) {
+	/**
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	@Override
+	public void addNode(GraphNode node) {
 		zestLayer.addNode(node.getNodeFigure());
 		if (!childNodes.contains(node)) {
 			childNodes.add(node);
 		}
 		// container.add(node.getNodeFigure());
 		// graph.registerItem(node);
+		node.setVisible(isExpanded);
 	}
 
 	void addNode(GraphContainer container) {
 		// Containers cannot be added to other containers (yet)
+	}
+
+	void addConnectionFigure(IFigure figure) {
+		nodeFigure.add(figure);
 	}
 
 	@Override
@@ -879,4 +981,22 @@ public class GraphContainer extends GraphNode implements IContainer {
 		}
 	}
 
+	/**
+	 * @since 2.0
+	 */
+	@Override
+	public List<GraphConnection> getConnections() {
+		return filterConnections(getGraph().getConnections());
+
+	}
+
+	private List<GraphConnection> filterConnections(List<? extends GraphConnection> connections) {
+		List<GraphConnection> result = new ArrayList<>();
+		for (GraphConnection connection : connections) {
+			if (connection.getSource().getParent() == this && connection.getDestination().getParent() == this) {
+				result.add(connection);
+			}
+		}
+		return result;
+	}
 }

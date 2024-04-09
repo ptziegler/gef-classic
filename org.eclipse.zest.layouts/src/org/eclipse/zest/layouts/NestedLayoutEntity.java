@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2005 CHISEL Group, University of Victoria, Victoria, BC,
+ * Copyright 2005, 2024 CHISEL Group, University of Victoria, Victoria, BC,
  *                      Canada.
  *
  * This program and the accompanying materials are made available under the
@@ -14,11 +14,15 @@ package org.eclipse.zest.layouts;
 
 import java.util.List;
 
+import org.eclipse.zest.layouts.interfaces.SubgraphLayout;
+
 /**
  * Extends LayoutEntity to provide methods for dealing with nested entities.
  *
  * @author Chris Callendar
+ * @deprecated Use {@link SubgraphLayout} instead.
  */
+@Deprecated(since = "2.0", forRemoval = true)
 public interface NestedLayoutEntity extends LayoutEntity {
 
 	/** Returns the parent entity. */
