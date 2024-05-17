@@ -78,7 +78,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -110,7 +109,6 @@ public class GraphSWTTests extends AbstractGraphTest {
 	 * @see <a href="https://github.com/eclipse-gef/gef-classic/issues/376">here</a>
 	 */
 	@Test
-	@Disabled
 	@Snippet(type = AnimationSnippet.class)
 	public void testAnimationSnippet() {
 		AtomicInteger repaintCount = new AtomicInteger();
