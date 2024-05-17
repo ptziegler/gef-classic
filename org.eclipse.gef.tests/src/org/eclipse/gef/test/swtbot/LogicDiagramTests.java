@@ -125,9 +125,11 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool("LED");
 		editor.click(50, 49);
+		waitForAnimation();
 
 		editor.activateTool("Label");
 		editor.click(200, 200);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.editParts(IsInstanceOf.instanceOf(LogicLabelEditPart.class));
 		assertEquals(editParts.size(), 1);
@@ -229,9 +231,11 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool(tool1);
 		editor.click(5, 5);
+		waitForAnimation();
 
 		editor.activateTool(tool2);
 		editor.click(205, 5);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 2);
@@ -294,9 +298,11 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool(tool1);
 		editor.click(5, 5);
+		waitForAnimation();
 
 		editor.activateTool(tool2);
 		editor.click(205, 205);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 2);
