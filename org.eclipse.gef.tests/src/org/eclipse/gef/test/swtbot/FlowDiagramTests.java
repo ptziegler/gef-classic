@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -39,16 +39,19 @@ public class FlowDiagramTests extends AbstractSWTBotEditorTests {
 		editor.activateTool("Parallel Activity");
 		assertEquals(editor.getEditPart("Sleep.....").sourceConnections().size(), 1);
 		editor.getEditPart("Sleep.....").click();
+		waitForAnimation();
 		assertEquals(editor.getEditPart("Sleep.....").sourceConnections().size(), 2);
 
 		editor.activateTool("Sequential Activity");
 		assertEquals(editor.getEditPart("a 12").children().size(), 0);
 		editor.getEditPart("a 12").click();
+		waitForAnimation();
 		assertEquals(editor.getEditPart("a 12").children().size(), 1);
 
 		editor.activateTool("Activity");
 		assertEquals(editor.getEditPart("a 12").children().size(), 1);
 		editor.getEditPart("a 12").click();
+		waitForAnimation();
 		assertEquals(editor.getEditPart("a 12").children().size(), 2);
 	}
 
@@ -84,7 +87,9 @@ public class FlowDiagramTests extends AbstractSWTBotEditorTests {
 
 		editor.activateTool("Connection Creation");
 		editor.getEditPart("Sleep.....").click();
+		waitForAnimation();
 		editor.getEditPart("Wake up").click();
+		waitForAnimation();
 		assertEquals(editor.getEditPart("Sleep.....").sourceConnections().size(), 2);
 		assertEquals(editor.getEditPart("Wake up").targetConnections().size(), 2);
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,6 +16,7 @@ package org.eclipse.gef.test.swtbot;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefViewer;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 
+import org.eclipse.draw2d.Animation;
 import org.eclipse.draw2d.FigureCanvas;
 
 import org.eclipse.gef.EditPart;
@@ -103,5 +106,24 @@ public abstract class AbstractSWTBotTests {
 		EditPart gefEditPart = editPart.part();
 		FigureCanvas figureCanvas = (FigureCanvas) gefEditPart.getViewer().getControl();
 		figureCanvas.getLightweightSystem().getUpdateManager().performUpdate();
+	}
+
+	/**
+	 * Blocks until the current animation has finished.
+	 */
+	protected static void waitForAnimation() {
+		while (UIThreadRunnable.syncExec(() -> getAnimationState() != 0)) {
+			Thread.yield();
+		}
+	}
+
+	private static final int getAnimationState() {
+		try {
+			Field f = Animation.class.getDeclaredField("state");
+			f.setAccessible(true);
+			return f.getInt(null);
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
