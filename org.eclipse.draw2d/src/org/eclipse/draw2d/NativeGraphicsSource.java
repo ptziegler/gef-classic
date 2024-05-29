@@ -58,7 +58,7 @@ public final class NativeGraphicsSource implements GraphicsSource {
 
 		// canvas.update() paints too much and only works on Windows. Use
 		// readAndDispatch() to only paint the redraw() event.
-		canvas.getDisplay().readAndDispatch();
+		// canvas.getDisplay().readAndDispatch();
 		return null;
 	}
 

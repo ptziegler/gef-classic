@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.swt.widgets.Display;
+
 /**
  * A utility for coordinating figure animations. During animation, multiple
  * <i>animators</i> are employed to capture the <em>initial</em> and
@@ -108,7 +110,8 @@ public class Animation {
 
 		while (progress != 0) {
 			step();
-			updateManager.performUpdate();
+			Display.getCurrent().readAndDispatch();
+//			updateManager.performUpdate();
 			if (progress == 1.0) {
 				progress = 0;
 			} else {
