@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright 2005, 2024, CHISEL Group, University of Victoria, Victoria, BC, Canada.
+ * Copyright 2005, 2024, CHISEL Group, University of Victoria, Victoria,
+ *                       BC, Canada and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -1031,9 +1032,10 @@ public class GraphNode extends GraphItem {
 	 * exist yet.
 	 *
 	 * @return modelFigure.
+	 * @noreference This method is not intended to be referenced by clients.
 	 */
 	@Override
-	IFigure getFigure() {
+	public IFigure getFigure() {
 		if (this.modelFigure == null) {
 			initFigure();
 		}
