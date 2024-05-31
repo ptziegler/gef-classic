@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2024 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -19,7 +19,12 @@ import org.eclipse.draw2d.IFigure;
 
 /**
  * A Custom Graph Node
+ *
+ * @deprecated Use {@link org.eclipse.zest.core.widgets.custom.CGraphNode}
+ *             instead. This class will be removed in a future release in
+ *             accordance with the two year deprecation policy.
  */
+@Deprecated(since = "1.12", forRemoval = true)
 public class CGraphNode extends GraphNode {
 
 	IFigure figure = null;
