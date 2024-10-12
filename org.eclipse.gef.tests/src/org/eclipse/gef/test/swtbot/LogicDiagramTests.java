@@ -235,6 +235,7 @@ public class LogicDiagramTests extends AbstractSWTBotTests {
 
 		editor.activateTool(tool2);
 		editor.click(205, 5);
+		bot.waitWhile(animationIsRunning());
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 2);
