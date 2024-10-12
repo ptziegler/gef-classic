@@ -13,6 +13,7 @@
 
 package org.eclipse.gef.test.swtbot;
 
+import static org.eclipse.gef.test.swtbot.AnimationIsRunning.animationIsRunning;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -40,11 +41,13 @@ public class FlowDiagramTests extends AbstractSWTBotTests {
 		assertEquals(editor.getEditPart("Sleep.....").sourceConnections().size(), 1);
 		editor.getEditPart("Sleep.....").click();
 		assertEquals(editor.getEditPart("Sleep.....").sourceConnections().size(), 2);
+		bot.waitWhile(animationIsRunning());
 
 		editor.activateTool("Sequential Activity");
 		assertEquals(editor.getEditPart("a 12").children().size(), 0);
 		editor.getEditPart("a 12").click();
 		assertEquals(editor.getEditPart("a 12").children().size(), 1);
+		bot.waitWhile(animationIsRunning());
 
 		editor.activateTool("Activity");
 		assertEquals(editor.getEditPart("a 12").children().size(), 1);

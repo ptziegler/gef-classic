@@ -267,4 +267,8 @@ public class GraphAnimation {
 		throw new UnsupportedOperationException("Utility class shell not be instantiated!"); //$NON-NLS-1$
 	}
 
+	public static boolean isAnimating() {
+		return PLAYBACK;
+	}
+
 }

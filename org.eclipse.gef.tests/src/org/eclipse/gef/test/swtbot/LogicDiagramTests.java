@@ -13,6 +13,7 @@
 
 package org.eclipse.gef.test.swtbot;
 
+import static org.eclipse.gef.test.swtbot.AnimationIsRunning.animationIsRunning;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -125,6 +126,7 @@ public class LogicDiagramTests extends AbstractSWTBotTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool("LED");
 		editor.click(50, 50);
+		bot.waitWhile(animationIsRunning());
 
 		editor.activateTool("Label");
 		editor.click(200, 200);
@@ -229,6 +231,7 @@ public class LogicDiagramTests extends AbstractSWTBotTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool(tool1);
 		editor.click(5, 5);
+		bot.waitWhile(animationIsRunning());
 
 		editor.activateTool(tool2);
 		editor.click(205, 5);
@@ -294,6 +297,7 @@ public class LogicDiagramTests extends AbstractSWTBotTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool(tool1);
 		editor.click(5, 5);
+		bot.waitWhile(animationIsRunning());
 
 		editor.activateTool(tool2);
 		editor.click(205, 205);
