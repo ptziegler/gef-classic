@@ -30,6 +30,7 @@ import org.junit.runners.Suite;
 	CommandStackTest.class,
 	RulerLayoutTests.class,
 	GraphicalViewerTest.class,
+	PaletteColorProviderTest.class,
 	SWTBotTestSuite.class
 })
 public class GEFTestSuite {

@@ -15,18 +15,23 @@ package org.eclipse.gef.test.swtbot;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
+
+import org.eclipse.swt.graphics.Color;
 
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 
-import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Border;
+import org.eclipse.draw2d.Clickable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.test.swtbot.utils.SWTBotGefPalette;
 import org.eclipse.gef.ui.palette.PaletteColorProvider;
@@ -71,11 +76,27 @@ public class ShapesDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefPalette palette = new SWTBotGefPalette(editor.getSWTBotGefViewer());
 		PaletteColorProvider colorProvider = palette.getColorProvider();
 
-		assertEquals(colorProvider.getListHoverBackgroundColor(), ColorConstants.cyan);
-		assertEquals(colorProvider.getListSelectedBackgroundColor(), ColorConstants.darkGreen);
-		assertEquals(colorProvider.getButton(), ColorConstants.lightGray);
-		assertEquals(colorProvider.getButtonDarker(), ColorConstants.gray);
-		assertEquals(colorProvider.getButtonDarkest(), ColorConstants.darkGray);
+		assertEquals(colorProvider.getListHoverBackgroundColor(), new Color(235, 239, 244)); // COLOR_PALETTE_BACKGROUND
+		assertEquals(colorProvider.getListSelectedBackgroundColor(), new Color(255, 255, 255)); // COLOR_ENTRY_SELECTED
+		assertEquals(colorProvider.getListBackground(), new Color(235, 239, 244)); // COLOR_PALETTE_BACKGROUND
+
+		EditPart drawerEditPart = palette.getEditPart("Shapes").part();
+		Clickable drawerToggle = drawerEditPart.getAdapter(Clickable.class);
+		assertNotNull(drawerToggle);
+
+		EditPart toolEntryEditPart = palette.getEditPart("Ellipse").part();
+		Clickable toolEntryToggle = toolEntryEditPart.getAdapter(Clickable.class);
+		assertNotNull(toolEntryToggle);
+
+		Border drawerBorder = drawerToggle.getBorder();
+		assertNotNull(drawerToggle);
+		assertEquals(drawerBorder.getClass().getName(),
+				"org.eclipse.gef.examples.shapes.palette.ShapesPaletteEditPartFactory$DrawerBackground");
+
+		Border toolEntryBorder = toolEntryToggle.getBorder();
+		assertNotNull(toolEntryBorder);
+		assertEquals(toolEntryBorder.getClass().getName(),
+				"org.eclipse.gef.examples.shapes.palette.ShapesPaletteEditPartFactory$ToolEntryBackground");
 	}
 
 	@Override

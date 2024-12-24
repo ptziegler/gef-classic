@@ -3,6 +3,7 @@
 ## Draw2D
 
 ## GEF
+ - In addition to the previous release, it is now also possible to customize the background and foreground color of the palette entries.
 
 ## Zest
 
