@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -27,6 +27,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefViewer;
 
+import org.eclipse.draw2d.Animation;
 import org.eclipse.draw2d.FigureCanvas;
 
 import org.eclipse.gef.EditPart;
@@ -86,10 +87,22 @@ public abstract class AbstractSWTBotTests {
 
 	@AfterEach
 	public void tearDown() throws Exception {
+		waitForAnimation();
 		// Cleanup problem listener and check for exceptions
 		Platform.removeLogListener(problemListener);
 		problems.forEach(Throwable::printStackTrace);
 		assertTrue(problems.isEmpty(), "Test threw an unchecked exception. Check logs for details");
+	}
+
+	/**
+	 * Convenience method that blocks until the current animation has finished. This
+	 * is required so that the test waits until one operation has concluded before
+	 * continuing with the next one.
+	 */
+	protected static final void waitForAnimation() {
+		while (Animation.isAnimating()) {
+			Thread.yield();
+		}
 	}
 
 	/**

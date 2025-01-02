@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -64,6 +64,7 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		// Add a new edit part to the primary viewer
 		editor.activateTool("XOR Gate");
 		editor.click(50, 50);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 1);
@@ -98,6 +99,7 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool("LED");
 		editor.click(3, 3);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 1);
@@ -125,9 +127,11 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool("LED");
 		editor.click(50, 50);
+		waitForAnimation();
 
 		editor.activateTool("Label");
 		editor.click(200, 200);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.editParts(IsInstanceOf.instanceOf(LogicLabelEditPart.class));
 		assertEquals(editParts.size(), 1);
@@ -153,6 +157,7 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool("LED");
 		editor.click(5, 5);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 1);
@@ -229,9 +234,11 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool(tool1);
 		editor.click(5, 5);
+		waitForAnimation();
 
 		editor.activateTool(tool2);
 		editor.click(205, 5);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 2);
@@ -294,9 +301,11 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		SWTBotGefEditor editor = bot.gefEditor("emptyModel1.logic");
 		editor.activateTool(tool1);
 		editor.click(5, 5);
+		waitForAnimation();
 
 		editor.activateTool(tool2);
 		editor.click(205, 205);
+		waitForAnimation();
 
 		List<SWTBotGefEditPart> editParts = editor.mainEditPart().children();
 		assertEquals(editParts.size(), 2);
