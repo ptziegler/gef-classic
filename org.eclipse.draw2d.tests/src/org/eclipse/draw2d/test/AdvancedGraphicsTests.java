@@ -120,6 +120,9 @@ public class AdvancedGraphicsTests extends BaseTestCase {
 
 		image = new Image(Display.getDefault(), 800, 600);
 		GC imageGC = new GC(image, SWT.NONE);
+		// Might be improperly initialized on some systems. e.g. configured as
+		// SWT.DEFAULT but behaves like SWT.ON.
+		imageGC.setTextAntialias(SWT.DEFAULT);
 		g = new SWTGraphics(imageGC);
 
 		resources.push(path1);
