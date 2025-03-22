@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2024 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -295,6 +295,18 @@ public class SWTEventDispatcher extends EventDispatcher {
 		}
 		releaseCapture();
 		receive(me);
+	}
+
+	/**
+	 * @see EventDispatcher#dispatchMouseWheelScrolled(org.eclipse.swt.widgets.Event)
+	 */
+	@Override
+	public void dispatchMouseWheelScrolled(org.eclipse.swt.widgets.Event e) {
+		org.eclipse.swt.events.MouseEvent me = new org.eclipse.swt.events.MouseEvent(e);
+		receive(me);
+		if (mouseTarget != null) {
+			mouseTarget.handleMouseWheelScrolled(currentEvent);
+		}
 	}
 
 	/**

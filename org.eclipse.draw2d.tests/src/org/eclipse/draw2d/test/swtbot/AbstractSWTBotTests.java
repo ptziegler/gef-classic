@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -25,18 +25,24 @@ import java.util.Objects;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
 
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.internal.Logger;
 import org.eclipse.draw2d.test.swtbot.AbstractSWTBotTests.SWTBotExtension;
 import org.eclipse.draw2d.test.utils.Snippet;
+import org.eclipse.draw2d.test.utils.TestLoggerContext;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
@@ -53,6 +59,11 @@ public abstract class AbstractSWTBotTests {
 	protected SWTBotCanvas bot;
 	protected FigureCanvas canvas;
 	protected IFigure root;
+
+	@BeforeAll
+	public static void init() {
+		Logger.setContext(new TestLoggerContext());
+	}
 
 	public static class SWTBotExtension implements InvocationInterceptor {
 		@Override
@@ -134,6 +145,20 @@ public abstract class AbstractSWTBotTests {
 			}
 			lock.release();
 		}
+	}
+
+	protected void scrollMouseWheelVertical(int x, int y, int count) {
+		Event e = new Event();
+		e.type = SWT.MouseVerticalWheel;
+		e.x = x;
+		e.y = y;
+		e.detail = SWT.SCROLL_LINE;
+		e.count = count;
+
+		UIThreadRunnable.syncExec(() -> {
+			canvas.scrollToY(-count);
+			canvas.notifyListeners(e.type, e);
+		});
 	}
 
 	private static boolean hasShell(Lookup lookup, Snippet snippet) throws ReflectiveOperationException {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2023 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -164,6 +164,14 @@ public interface IFigure {
 	 * @param listener The listener to add
 	 */
 	void addMouseMotionListener(MouseMotionListener listener);
+
+	/**
+	 * Registers the given listener as a MouseWheelListener of this IFigure.
+	 *
+	 * @param listener The listener to add
+	 * @since 3.20
+	 */
+	void addMouseWheelListener(MouseWheelListener listener);
 
 	/**
 	 * Called after this IFigure is added to its parent.
@@ -601,6 +609,18 @@ public interface IFigure {
 	void handleMouseReleased(MouseEvent event);
 
 	/**
+	 * Called when a mouse wheel was scrolled while within this IFigure's bounds.
+	 * <p>
+	 * <b>NOTE</b>: You should not override this method. If you are interested in
+	 * receiving notification of this type of event, you should register a
+	 * {@link MouseWheelListener} with this IFigure.
+	 *
+	 * @param event The mouse event.
+	 * @since 3.20
+	 */
+	void handleMouseWheelScrolled(MouseEvent event);
+
+	/**
 	 * Returns <code>true</code> if this IFigure has focus.
 	 *
 	 * @return <code>true</code> if this IFigure has focus
@@ -779,6 +799,15 @@ public interface IFigure {
 	 * @param listener The listener to remove
 	 */
 	void removeMouseMotionListener(MouseMotionListener listener);
+
+	/**
+	 * Unregisters the given listener, so that it will no longer receive
+	 * notification of mouse wheel events.
+	 *
+	 * @param listener The listener to remove
+	 * @since 3.20
+	 */
+	void removeMouseWheelListener(MouseWheelListener listener);
 
 	/**
 	 * Called before this IFigure is removed from its parent.
