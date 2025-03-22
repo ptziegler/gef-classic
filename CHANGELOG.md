@@ -17,6 +17,8 @@
       }
    };
    ```
+ - `IFigure`'s can register themselves to mouse scroll events using the `MouseWheelListener`.
+
 ## GEF
 
 ## Zest

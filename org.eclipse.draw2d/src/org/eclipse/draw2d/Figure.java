@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2024 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -289,6 +289,14 @@ public class Figure implements IFigure {
 	@Override
 	public void addMouseMotionListener(MouseMotionListener listener) {
 		eventListeners.addListener(MouseMotionListener.class, listener);
+	}
+
+	/**
+	 * @see IFigure#addMouseWheelListener(org.eclipse.draw2d.MouseWheelListener)
+	 */
+	@Override
+	public void addMouseWheelListener(MouseWheelListener listener) {
+		eventListeners.addListener(MouseWheelListener.class, listener);
 	}
 
 	/**
@@ -1042,6 +1050,17 @@ public class Figure implements IFigure {
 	}
 
 	/**
+	 * @see IFigure#handleMouseWheelScrolled(org.eclipse.draw2d.MouseEvent)
+	 */
+	@Override
+	public void handleMouseWheelScrolled(MouseEvent event) {
+		var iter = eventListeners.getListeners(MouseWheelListener.class);
+		while (!event.isConsumed() && iter.hasNext()) {
+			iter.next().mouseWheelMoved(event);
+		}
+	}
+
+	/**
 	 * @see IFigure#hasFocus()
 	 */
 	@Override
@@ -1491,6 +1510,14 @@ public class Figure implements IFigure {
 	@Override
 	public void removeMouseMotionListener(MouseMotionListener listener) {
 		eventListeners.removeListener(MouseMotionListener.class, listener);
+	}
+
+	/**
+	 * @see IFigure#removeMouseWheelListener(org.eclipse.draw2d.MouseWheelListener)
+	 */
+	@Override
+	public void removeMouseWheelListener(MouseWheelListener listener) {
+		eventListeners.removeListener(MouseWheelListener.class, listener);
 	}
 
 	/**
