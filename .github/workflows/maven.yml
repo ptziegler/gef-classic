@@ -11,7 +11,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         java: [ 21 ]
-        toolchain: [ 17, 21 ]
+        toolchain: [ 21 ]
     runs-on: ${{ matrix.os }} 
     name: OS ${{ matrix.os }} Java ${{ matrix.java }} Toolchain Java ${{ matrix.toolchain }} compile
     steps:
