@@ -99,7 +99,13 @@ BRANCH_NAME=${env.BRANCH_NAME}
     always {
       junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
       discoverGitReferenceBuild referenceJob: 'build-classic/master'
-      recordIssues publishAllIssues: true, tools: [java(), mavenConsole(), javaDoc()]
+      recordIssues publishAllIssues:false, ignoreQualityGate:true,
+        tools: [
+          eclipse(name: 'Eclipse Java Compiler', pattern: '**/target/ecj/*.xml'),
+          mavenConsole(),
+          javaDoc()
+        ],
+        qualityGates: [[threshold: 1, type: 'DELTA', unstable: true]]
     }
 
     failure {
