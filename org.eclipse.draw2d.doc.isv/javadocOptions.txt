@@ -9,8 +9,8 @@
 -windowtitle "Draw2d API Specification"
 -doctitle "Draw2d API Specification"
 -header "<b>Draw2d</b><br>@build@"
--bottom "Copyright (c) IBM Corp. and others 2000, 2024.  All Rights Reserved."
--link https://docs.oracle.com/en/java/javase/17/
+-bottom "Copyright (c) IBM Corp. and others 2000, 2025.  All Rights Reserved."
+-link https://docs.oracle.com/en/java/javase/17/docs/api/
 -linkoffline PLUGINS_ROOT/org.eclipse.platform.doc.isv/reference/api @linkoffline-target@/org.eclipse.platform.doc.isv/reference/api
 -tag noextend:t:"@noextend"
 -tag noimplement:t:"@noimplement"
