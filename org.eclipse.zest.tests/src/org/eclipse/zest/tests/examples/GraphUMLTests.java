@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,7 +13,7 @@
 
 package org.eclipse.zest.tests.examples;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.VarHandle;
@@ -26,7 +26,7 @@ import org.eclipse.zest.examples.uml.UMLClassFigure;
 import org.eclipse.zest.examples.uml.UMLExample;
 import org.eclipse.zest.tests.utils.Snippet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This class instantiates the UML-based Zest examples and tests the correctness

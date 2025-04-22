@@ -13,7 +13,7 @@
 
 package org.eclipse.zest.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,15 +26,15 @@ import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
 import org.eclipse.zest.layouts.progress.ProgressEvent;
 import org.eclipse.zest.layouts.progress.ProgressListener;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("removal")
 public class LayoutAlgorithmTest {
 	private LayoutAlgorithm.Zest1 layoutAlgorithm;
 	private Set<String> logger;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		logger = new HashSet<>();
 		layoutAlgorithm = new GridLayoutAlgorithm.Zest1();

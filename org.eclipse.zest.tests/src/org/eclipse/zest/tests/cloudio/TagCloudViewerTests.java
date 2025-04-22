@@ -11,9 +11,10 @@
  *******************************************************************************/
 package org.eclipse.zest.tests.cloudio;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +33,9 @@ import org.eclipse.zest.cloudio.TagCloudViewer;
 import org.eclipse.zest.cloudio.Word;
 import org.eclipse.zest.cloudio.layout.DefaultLayouter;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TagCloudViewerTests {
 
@@ -43,7 +44,7 @@ public class TagCloudViewerTests {
 	private Composite composite;
 	private TagCloud cloud;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		display = Display.getCurrent();
 		if (display == null) {
@@ -55,7 +56,7 @@ public class TagCloudViewerTests {
 		cloud = new TagCloud(composite, SWT.NONE);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		composite.dispose();
 		if (createdDisplay) {
@@ -64,15 +65,15 @@ public class TagCloudViewerTests {
 	}
 
 	@SuppressWarnings("static-method")
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructor_NullCloud() {
-		new TagCloudViewer(null);
+		assertThrows(IllegalArgumentException.class, () -> new TagCloudViewer(null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructor_DisposedCloud() {
 		cloud.dispose();
-		new TagCloudViewer(cloud);
+		assertThrows(IllegalArgumentException.class, () -> new TagCloudViewer(cloud));
 	}
 
 	@Test
@@ -85,16 +86,16 @@ public class TagCloudViewerTests {
 		assertTrue(viewer.getSelection().isEmpty());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidLabelProvider() {
 		TagCloudViewer viewer = new TagCloudViewer(cloud);
-		viewer.setLabelProvider(null);
+		assertThrows(IllegalArgumentException.class, () -> viewer.setLabelProvider(null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidLabelProvider2() {
 		TagCloudViewer viewer = new TagCloudViewer(cloud);
-		viewer.setLabelProvider(new BaseLabelProvider());
+		assertThrows(IllegalArgumentException.class, () -> viewer.setLabelProvider(new BaseLabelProvider()));
 	}
 
 	@Test
@@ -105,17 +106,17 @@ public class TagCloudViewerTests {
 		assertEquals(labelProvider, viewer.getLabelProvider());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidContentProvider() {
 		TagCloudViewer viewer = new TagCloudViewer(cloud);
-		viewer.setContentProvider(null);
+		assertThrows(IllegalArgumentException.class, () -> viewer.setContentProvider(null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidContentProvider2() {
 		TagCloudViewer viewer = new TagCloudViewer(cloud);
-		viewer.setContentProvider(new IContentProvider() {
-		});
+		assertThrows(IllegalArgumentException.class, () -> viewer.setContentProvider(new IContentProvider() {
+		}));
 	}
 
 	private static class ListContentProvider implements ITreeContentProvider {
@@ -176,10 +177,10 @@ public class TagCloudViewerTests {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidLayouter() {
 		TagCloudViewer viewer = new TagCloudViewer(cloud);
-		viewer.setLayouter(null);
+		assertThrows(IllegalArgumentException.class, () -> viewer.setLayouter(null));
 	}
 
 	@Test

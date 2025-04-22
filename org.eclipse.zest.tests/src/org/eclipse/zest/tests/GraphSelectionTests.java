@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.zest.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Selection-related tests for the {@link Graph} class.
@@ -44,7 +44,7 @@ public class GraphSelectionTests {
 
 	private Graph graph;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		graph = new Graph(new Shell(), SWT.NONE);
 		nodes = new GraphNode[] { new GraphNode(graph, SWT.NONE), new GraphNode(graph, SWT.NONE) };
@@ -73,8 +73,8 @@ public class GraphSelectionTests {
 		Event event = new Event();
 		event.widget = nodes[0];
 		graph.notifyListeners(SWT.Selection, event);
-		assertEquals("Two listeners should receive one event each", 2, selectionEvents.size()); //$NON-NLS-1$
-		assertEquals("Two listeners should receive the same event", selectionEvents.get(0), selectionEvents.get(1)); //$NON-NLS-1$
+		assertEquals(2, selectionEvents.size(), "Two listeners should receive one event each"); //$NON-NLS-1$
+		assertEquals(selectionEvents.get(0), selectionEvents.get(1), "Two listeners should receive the same event"); //$NON-NLS-1$
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class GraphSelectionTests {
 		graph.setSelection(nodes);
 		nodes[0].dispose();
 		graph.layout();
-		assertEquals("Disposing a selected node should remove it from the selection", 1, graph.getSelection().size()); //$NON-NLS-1$
+		assertEquals(1, graph.getSelection().size(), "Disposing a selected node should remove it from the selection"); //$NON-NLS-1$
 	}
 
 	/**
@@ -97,14 +97,14 @@ public class GraphSelectionTests {
 		final List<SelectionEvent> selectionEvents = new ArrayList<>();
 		graph.addSelectionListener(setupListener(selectionEvents));
 		graph.setSelection(nodes);
-		assertEquals("Programmatic selection should not trigger events", 0, selectionEvents.size()); //$NON-NLS-1$
+		assertEquals(0, selectionEvents.size(), "Programmatic selection should not trigger events"); //$NON-NLS-1$
 		for (GraphNode node : nodes) {
-			assertTrue("Programmatic selection should select nodes", node.isSelected()); //$NON-NLS-1$
+			assertTrue(node.isSelected(), "Programmatic selection should select nodes"); //$NON-NLS-1$
 		}
 		graph.setSelection(new GraphNode[] { nodes[0] });
 		for (int i = 1; i < nodes.length; i++) {
 			GraphNode node = nodes[i];
-			assertFalse("Changing the selection should deselect the nodes selected before", node.isSelected()); //$NON-NLS-1$
+			assertFalse(node.isSelected(), "Changing the selection should deselect the nodes selected before"); //$NON-NLS-1$
 		}
 	}
 
@@ -117,9 +117,9 @@ public class GraphSelectionTests {
 		final List<SelectionEvent> selectionEvents = new ArrayList<>();
 		graph.addSelectionListener(setupListener(selectionEvents));
 		graph.selectAll();
-		assertEquals("Programmatic selection should not trigger events", 0, selectionEvents.size()); //$NON-NLS-1$
+		assertEquals(0, selectionEvents.size(), "Programmatic selection should not trigger events"); //$NON-NLS-1$
 		for (GraphNode node : graph.getNodes()) {
-			assertTrue("Programmatic selection should set nodes selected", node.isSelected()); //$NON-NLS-1$
+			assertTrue(node.isSelected(), "Programmatic selection should set nodes selected"); //$NON-NLS-1$
 		}
 	}
 
@@ -135,9 +135,9 @@ public class GraphSelectionTests {
 		Event event = new Event();
 		event.widget = graph;
 		graph.notifyListeners(SWT.Dispose, event);
-		assertEquals("Non-selection events should not be received", 0, selectionEvents.size()); //$NON-NLS-1$
+		assertEquals(0, selectionEvents.size(), "Non-selection events should not be received"); //$NON-NLS-1$
 		graph.notifyListeners(SWT.Selection, event);
-		assertEquals("Selection events should be received", 1, selectionEvents.size()); //$NON-NLS-1$
+		assertEquals(1, selectionEvents.size(), "Selection events should be received"); //$NON-NLS-1$
 	}
 
 	@Test

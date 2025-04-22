@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.zest.tests;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,9 +31,8 @@ import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link IFigureProvider} class.
@@ -39,7 +40,7 @@ import org.junit.Test;
  * @author Fabian Steeg (fsteeg)
  *
  */
-public class IFigureProviderTests extends Assert {
+public class IFigureProviderTests {
 
 	private GraphViewer viewer;
 	private Shell shell;
@@ -47,7 +48,7 @@ public class IFigureProviderTests extends Assert {
 	/**
 	 * Set up the shell and viewer to use in the tests.
 	 */
-	@Before
+	@BeforeEach
 	public void setUp() {
 		shell = new Shell();
 		viewer = new GraphViewer(shell, SWT.NONE);
@@ -103,9 +104,9 @@ public class IFigureProviderTests extends Assert {
 			buffer.append(((Label) n.getNodeFigure().getChildren().get(0)).getText());
 		}
 		String string = buffer.toString();
-		assertTrue("Label 1 should be in figure labels", string.indexOf("1") >= 0); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue("Label 2 should be in figure labels", string.indexOf("2") >= 0); //$NON-NLS-1$ //$NON-NLS-2$
-		assertTrue("Label 3 should be in figure labels", string.indexOf("3") >= 0); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(string.indexOf("1") >= 0, "Label 1 should be in figure labels"); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(string.indexOf("2") >= 0, "Label 2 should be in figure labels"); //$NON-NLS-1$ //$NON-NLS-2$
+		assertTrue(string.indexOf("3") >= 0, "Label 3 should be in figure labels"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private class DestinationContentProvider implements IGraphContentProvider {
