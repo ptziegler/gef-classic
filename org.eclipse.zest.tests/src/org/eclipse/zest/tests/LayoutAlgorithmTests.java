@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.zest.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Item;
@@ -28,7 +28,7 @@ import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
 import org.eclipse.zest.layouts.interfaces.LayoutContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests involving the {@link LayoutAlgorithm} interface.

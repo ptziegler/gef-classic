@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,9 +13,9 @@
 
 package org.eclipse.zest.tests.examples;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -262,7 +262,7 @@ public abstract class AbstractGraphTest {
 	protected static void assertCurve(GraphConnection connection, int curveDepth) throws ReflectiveOperationException {
 		MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(connection.getClass(), MethodHandles.lookup());
 		VarHandle field = lookup.findVarHandle(connection.getClass(), "curveDepth", int.class); //$NON-NLS-1$
-		assertEquals("Unexpected connection curve", curveDepth, field.get(connection)); //$NON-NLS-1$
+		assertEquals(curveDepth, field.get(connection), "Unexpected connection curve"); //$NON-NLS-1$
 	}
 
 	/**

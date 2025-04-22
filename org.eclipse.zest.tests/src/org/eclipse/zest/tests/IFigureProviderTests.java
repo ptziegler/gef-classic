@@ -29,9 +29,9 @@ import org.eclipse.draw2d.Ellipse;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link IFigureProvider} class.
@@ -47,7 +47,7 @@ public class IFigureProviderTests extends Assert {
 	/**
 	 * Set up the shell and viewer to use in the tests.
 	 */
-	@Before
+	@BeforeEach
 	public void setUp() {
 		shell = new Shell();
 		viewer = new GraphViewer(shell, SWT.NONE);

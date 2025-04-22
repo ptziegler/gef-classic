@@ -11,10 +11,11 @@
  *******************************************************************************/
 package org.eclipse.zest.tests.cloudio;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,9 +42,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.zest.cloudio.TagCloud;
 import org.eclipse.zest.cloudio.Word;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TagCloudTests {
 
@@ -51,7 +52,7 @@ public class TagCloudTests {
 	private boolean createdDisplay = false;
 	private Composite composite;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		display = Display.getCurrent();
 		if (display == null) {
@@ -62,7 +63,7 @@ public class TagCloudTests {
 		composite.setLayout(new FillLayout());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		composite.dispose();
 		if (createdDisplay) {
@@ -73,9 +74,9 @@ public class TagCloudTests {
 	// Lifecycle:
 
 	@SuppressWarnings("static-method")
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructor_NullParent() {
-		new TagCloud(null, SWT.NONE);
+		assertThrows(IllegalArgumentException.class, () -> new TagCloud(null, SWT.NONE));
 	}
 
 	@Test
@@ -93,10 +94,10 @@ public class TagCloudTests {
 
 	// Background Color:
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidBackgroundColor() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setBackground(null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setBackground(null));
 	}
 
 	@Test

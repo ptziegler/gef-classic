@@ -11,10 +11,10 @@
  *******************************************************************************/
 package org.eclipse.zest.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,8 @@ import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphItem;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link GraphViewer} class.
@@ -58,7 +58,7 @@ public class GraphViewerTests {
 	/**
 	 * Set up the shell and viewer to use in the tests.
 	 */
-	@Before
+	@BeforeEach
 	public void setUp() {
 		shell = new Shell();
 		viewer = new GraphViewer(shell, SWT.NONE);
