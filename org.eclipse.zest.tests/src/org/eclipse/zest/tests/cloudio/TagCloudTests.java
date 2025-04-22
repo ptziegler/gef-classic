@@ -11,10 +11,11 @@
  *******************************************************************************/
 package org.eclipse.zest.tests.cloudio;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,9 +42,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.zest.cloudio.TagCloud;
 import org.eclipse.zest.cloudio.Word;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TagCloudTests {
 
@@ -51,7 +52,7 @@ public class TagCloudTests {
 	private boolean createdDisplay = false;
 	private Composite composite;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		display = Display.getCurrent();
 		if (display == null) {
@@ -62,7 +63,7 @@ public class TagCloudTests {
 		composite.setLayout(new FillLayout());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		composite.dispose();
 		if (createdDisplay) {
@@ -73,9 +74,9 @@ public class TagCloudTests {
 	// Lifecycle:
 
 	@SuppressWarnings("static-method")
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructor_NullParent() {
-		new TagCloud(null, SWT.NONE);
+		assertThrows(IllegalArgumentException.class, () -> new TagCloud(null, SWT.NONE));
 	}
 
 	@Test
@@ -93,10 +94,10 @@ public class TagCloudTests {
 
 	// Background Color:
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidBackgroundColor() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setBackground(null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setBackground(null));
 	}
 
 	@Test
@@ -115,10 +116,10 @@ public class TagCloudTests {
 
 	// Selection Color:
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidSelectionColor() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setSelectionColor(null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setSelectionColor(null));
 	}
 
 	@Test
@@ -137,16 +138,16 @@ public class TagCloudTests {
 
 	// Font Size:
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidMaxFontSize() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setMaxFontSize(0);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setMaxFontSize(0));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidMinFontSize() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setMinFontSize(0);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setMinFontSize(0));
 	}
 
 	@Test
@@ -167,21 +168,21 @@ public class TagCloudTests {
 
 	// Set Words:
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords1() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setWords(null, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(null, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords2() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
 		words.add(null);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords3() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
@@ -189,10 +190,10 @@ public class TagCloudTests {
 		w.setFontData(composite.getFont().getFontData());
 		w.weight = Math.random();
 		words.add(w);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords4() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
@@ -200,56 +201,56 @@ public class TagCloudTests {
 		w.setColor(Display.getDefault().getSystemColor(SWT.COLOR_RED));
 		w.weight = Math.random();
 		words.add(w);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords5() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
 		Word word = getWord();
 		word.angle = -180;
 		words.add(word);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords6() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
 		Word word = getWord();
 		word.angle = 180;
 		words.add(word);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords7() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
 		Word word = getWord();
 		word.weight = -1;
 		words.add(word);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords8() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
 		Word word = getWord();
 		word.weight = 2;
 		words.add(word);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetIllegalWords9() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
 		List<Word> words = new ArrayList<>();
 		Word word = new Word(null);
 		words.add(word);
-		cloud.setWords(words, null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setWords(words, null));
 	}
 
 	private Word getWord() {
@@ -279,24 +280,24 @@ public class TagCloudTests {
 		assertEquals(10, placed);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidOpacity1() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setOpacity(-1);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setOpacity(-1));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidOpacity2() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setOpacity(256);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setOpacity(256));
 	}
 
 	// Layouter
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidLayouter() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setLayouter(null);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setLayouter(null));
 	}
 
 	// Zoom
@@ -402,10 +403,10 @@ public class TagCloudTests {
 
 	// Boost
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidBoost() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setBoost(-1);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setBoost(-1));
 	}
 
 	@Test
@@ -416,10 +417,10 @@ public class TagCloudTests {
 		assertEquals(3, cloud.getBoost());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testSetInvalidBoostFactor() {
 		TagCloud cloud = new TagCloud(composite, SWT.NONE);
-		cloud.setBoostFactor(0);
+		assertThrows(IllegalArgumentException.class, () -> cloud.setBoostFactor(0));
 	}
 
 	@Test

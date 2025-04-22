@@ -13,9 +13,9 @@
 
 package org.eclipse.zest.tests.examples;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.VarHandle;
@@ -78,8 +78,8 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * This class instantiates the {@link Graph}-based Zest examples and tests the
@@ -110,7 +110,7 @@ public class GraphSWTTests extends AbstractGraphTest {
 	 * @see <a href="https://github.com/eclipse-gef/gef-classic/issues/376">here</a>
 	 */
 	@Test
-	@Ignore
+	@Disabled
 	@Snippet(type = AnimationSnippet.class)
 	public void testAnimationSnippet() {
 		AtomicInteger repaintCount = new AtomicInteger();
@@ -118,7 +118,7 @@ public class GraphSWTTests extends AbstractGraphTest {
 
 		robot.button("Animate").click();
 
-		assertTrue("Animation was likely not drawn!", repaintCount.get() > 0);
+		assertTrue(repaintCount.get() > 0, "Animation was likely not drawn!");
 		assertNoOverlap(graph);
 	}
 
@@ -151,8 +151,8 @@ public class GraphSWTTests extends AbstractGraphTest {
 		for (GraphNode node : graph.getNodes()) {
 			Point p = node.getLocation();
 			Rectangle bounds = graph.getBounds();
-			assertTrue("Node outside of bounds", p.x >= 0 && p.x <= bounds.width);
-			assertTrue("Node outside of bounds", p.y >= 0 && p.y <= bounds.height);
+			assertTrue(p.x >= 0 && p.x <= bounds.width, "Node outside of bounds");
+			assertTrue(p.y >= 0 && p.y <= bounds.height, "Node outside of bounds");
 		}
 
 		assertNoOverlap(graph);
@@ -615,7 +615,7 @@ public class GraphSWTTests extends AbstractGraphTest {
 		double avgLengthOuter = sumLengthOuter / countOuter;
 
 		// The inner nodes have a higher weight and are thus (a lot) shorter
-		assertTrue(avgLengthInner + ", " + avgLengthOuter, (avgLengthInner * 1.5) < avgLengthOuter);
+		assertTrue((avgLengthInner * 1.5) < avgLengthOuter, avgLengthInner + ", " + avgLengthOuter);
 	}
 
 	/**

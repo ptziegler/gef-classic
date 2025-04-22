@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.zest.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Item;
@@ -28,7 +28,7 @@ import org.eclipse.zest.layouts.algorithms.AbstractLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.GridLayoutAlgorithm;
 import org.eclipse.zest.layouts.interfaces.LayoutContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests involving the {@link LayoutAlgorithm} interface.
@@ -54,10 +54,10 @@ public class LayoutAlgorithmTests {
 				Item[] nodes = context.getNodes()[0].getItems();
 				assertEquals(1, all.length);
 				assertEquals(1, nodes.length);
-				assertTrue("All entity items should be wrapped in a GraphNode[]", all instanceof GraphNode[]); //$NON-NLS-1$
-				assertTrue("Node entity items should be wrapped in a GraphNode[]", nodes instanceof GraphNode[]); //$NON-NLS-1$
-				assertTrue("All entity items should be GraphNode instances", all[0] instanceof GraphNode); //$NON-NLS-1$
-				assertTrue("Node entity items should be GraphNode instances", nodes[0] instanceof GraphNode); //$NON-NLS-1$
+				assertTrue(all instanceof GraphNode[], "All entity items should be wrapped in a GraphNode[]"); //$NON-NLS-1$
+				assertTrue(nodes instanceof GraphNode[], "Node entity items should be wrapped in a GraphNode[]"); //$NON-NLS-1$
+				assertTrue(all[0] instanceof GraphNode, "All entity items should be GraphNode instances"); //$NON-NLS-1$
+				assertTrue(nodes[0] instanceof GraphNode, "Node entity items should be GraphNode instances"); //$NON-NLS-1$
 			}
 
 			@Override
@@ -87,8 +87,8 @@ public class LayoutAlgorithmTests {
 				assertEquals(1, context.getSubgraphs().length);
 				Item[] sub = context.getSubgraphs()[0].getItems();
 				assertEquals(3, sub.length);
-				assertTrue("All subgraph items should be wrapped in a GraphNode[]", sub instanceof GraphNode[]); //$NON-NLS-1$
-				assertTrue("All subgraph items should be GraphNode instances", sub[0] instanceof GraphNode); //$NON-NLS-1$
+				assertTrue(sub instanceof GraphNode[], "All subgraph items should be wrapped in a GraphNode[]"); //$NON-NLS-1$
+				assertTrue(sub[0] instanceof GraphNode, "All subgraph items should be GraphNode instances"); //$NON-NLS-1$
 			}
 
 			@Override

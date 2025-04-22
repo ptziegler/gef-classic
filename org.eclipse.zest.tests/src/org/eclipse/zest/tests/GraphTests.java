@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.zest.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -29,8 +29,8 @@ import org.eclipse.zest.layouts.interfaces.LayoutContext;
 
 import org.eclipse.draw2d.Figure;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * General tests for the {@link Graph} class.
@@ -48,7 +48,7 @@ public class GraphTests {
 
 	Shell shell;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		shell = new Shell();
 		graph = new Graph(shell, SWT.NONE);
@@ -86,9 +86,9 @@ public class GraphTests {
 	public void testDisposeGraphWithDisposedNode() {
 		nodes[0].dispose(); // removes the node from the graph's nodes list
 		((List<GraphNode>) graph.getNodes()).add(nodes[0]); // but we're malicious and add it back
-		assertTrue("Node should be disposed", nodes[0].isDisposed()); //$NON-NLS-1$
+		assertTrue(nodes[0].isDisposed(), "Node should be disposed"); //$NON-NLS-1$
 		graph.dispose();
-		assertTrue("Graph should be disposed", graph.isDisposed()); //$NON-NLS-1$
+		assertTrue(graph.isDisposed(), "Graph should be disposed"); //$NON-NLS-1$
 	}
 
 	/**
@@ -101,9 +101,9 @@ public class GraphTests {
 	public void testDisposeGraphWithDisposedConnection() {
 		connection.dispose();
 		((List<GraphConnection>) graph.getConnections()).add(connection);
-		assertTrue("Connection should be disposed", connection.isDisposed()); //$NON-NLS-1$
+		assertTrue(connection.isDisposed(), "Connection should be disposed"); //$NON-NLS-1$
 		graph.dispose();
-		assertTrue("Graph should be disposed", graph.isDisposed()); //$NON-NLS-1$
+		assertTrue(graph.isDisposed(), "Graph should be disposed"); //$NON-NLS-1$
 	}
 
 	/**
@@ -139,8 +139,8 @@ public class GraphTests {
 		GraphNode n = graph.getNodes().get(0);
 		GraphConnection c = graph.getConnections().get(0);
 		shell.dispose();
-		assertTrue("The graph's nodes should be disposed", n.isDisposed()); //$NON-NLS-1$
-		assertTrue("The graph's edges should be disposed", c.isDisposed()); //$NON-NLS-1$
+		assertTrue(n.isDisposed(), "The graph's nodes should be disposed"); //$NON-NLS-1$
+		assertTrue(c.isDisposed(), "The graph's edges should be disposed"); //$NON-NLS-1$
 
 	}
 

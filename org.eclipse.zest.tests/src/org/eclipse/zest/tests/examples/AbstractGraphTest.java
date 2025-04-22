@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Patrick Ziegler and others.
+ * Copyright (c) 2024, 2025 Patrick Ziegler and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,15 +13,16 @@
 
 package org.eclipse.zest.tests.examples;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
@@ -37,6 +38,7 @@ import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.core.widgets.IContainer;
 import org.eclipse.zest.core.widgets.internal.GraphLabel;
 import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
+import org.eclipse.zest.tests.examples.AbstractGraphTest.SWTBotExtension;
 import org.eclipse.zest.tests.utils.GraphicalRobot;
 import org.eclipse.zest.tests.utils.Snippet;
 
@@ -51,26 +53,33 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import org.junit.Rule;
-import org.junit.rules.TestRule;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 /**
  * Abstract base class for all tests related to the Zest examples.
  */
+@ExtendWith(SWTBotExtension.class)
 public abstract class AbstractGraphTest {
 	protected Graph graph;
 	protected GraphicalRobot robot;
 
-	@Rule
-	public TestRule rule = (base, description) -> new Statement() {
+	public static class SWTBotExtension implements InvocationInterceptor {
 		@Override
-		public void evaluate() throws Throwable {
-			Snippet annotation = description.getAnnotation(Snippet.class);
-			Objects.requireNonNull(annotation, "Test is missing @Snippet annotation."); //$NON-NLS-1$
-			doTest(annotation, base);
+		public void interceptTestMethod(Invocation<Void> invocation,
+				ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext)
+				throws Throwable {
+			Object target = invocationContext.getTarget().orElse(null);
+			if (target instanceof AbstractGraphTest testObject) {
+				Snippet annotation = invocationContext.getExecutable().getAnnotation(Snippet.class);
+				Objects.requireNonNull(annotation, "Test is missing @Snippet annotation."); //$NON-NLS-1$
+				testObject.doTest(annotation, invocation);
+			}
 		}
-	};
+	}
 
 	/**
 	 * Wrapper method to handle the instantiation of the example class and the
@@ -82,11 +91,10 @@ public abstract class AbstractGraphTest {
 	 * <li>It must store the created viewer in a static {@code viewer} variable.
 	 * <ul>
 	 *
-	 * @param clazz     The example to instantiate.
 	 * @param statement The test to execute once the example has been created.
 	 * @throws Throwable If the example could not be instantiated.
 	 */
-	private void doTest(Snippet annotation, Statement statement) throws Throwable {
+	private void doTest(Snippet annotation, Invocation<Void> statement) throws Throwable {
 		Class<?> clazz = annotation.type();
 
 		Semaphore lock = new Semaphore(0);
@@ -117,7 +125,7 @@ public abstract class AbstractGraphTest {
 				// Wait for layout to be applied
 				waitEventLoop(0);
 				// Run the actual test
-				statement.evaluate();
+				statement.proceed();
 			} catch (Throwable e) {
 				throwable.set(e);
 			} finally {
@@ -262,7 +270,7 @@ public abstract class AbstractGraphTest {
 	protected static void assertCurve(GraphConnection connection, int curveDepth) throws ReflectiveOperationException {
 		MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(connection.getClass(), MethodHandles.lookup());
 		VarHandle field = lookup.findVarHandle(connection.getClass(), "curveDepth", int.class); //$NON-NLS-1$
-		assertEquals("Unexpected connection curve", curveDepth, field.get(connection)); //$NON-NLS-1$
+		assertEquals(curveDepth, field.get(connection), "Unexpected connection curve"); //$NON-NLS-1$
 	}
 
 	/**

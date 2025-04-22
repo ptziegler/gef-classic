@@ -11,10 +11,10 @@
  *******************************************************************************/
 package org.eclipse.zest.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,8 @@ import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphItem;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link GraphViewer} class.
@@ -58,7 +58,7 @@ public class GraphViewerTests {
 	/**
 	 * Set up the shell and viewer to use in the tests.
 	 */
-	@Before
+	@BeforeEach
 	public void setUp() {
 		shell = new Shell();
 		viewer = new GraphViewer(shell, SWT.NONE);
@@ -72,7 +72,7 @@ public class GraphViewerTests {
 	public void testDisposalWithDropTarget() {
 		new DropTarget(viewer.getGraphControl(), DND.DROP_MOVE | DND.DROP_COPY);
 		shell.dispose();
-		assertTrue("The viewer's graph control should be disposed", viewer.getControl().isDisposed()); //$NON-NLS-1$
+		assertTrue(viewer.getControl().isDisposed(), "The viewer's graph control should be disposed"); //$NON-NLS-1$
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class GraphViewerTests {
 		viewer.addDragSupport(DND.DROP_MOVE, new Transfer[] { TextTransfer.getInstance() },
 				new DelegatingDragAdapter());
 		shell.dispose();
-		assertTrue("The viewer's graph control should be disposed", viewer.getControl().isDisposed()); //$NON-NLS-1$
+		assertTrue(viewer.getControl().isDisposed(), "The viewer's graph control should be disposed"); //$NON-NLS-1$
 	}
 
 	/**
@@ -105,8 +105,7 @@ public class GraphViewerTests {
 	 */
 	@Test
 	public void testFindGraphItem() {
-		assertNull("If an item cannot be found, the viewer should return null", //$NON-NLS-1$
-				viewer.findGraphItem(5));
+		assertNull(viewer.findGraphItem(5), "If an item cannot be found, the viewer should return null"); //$NON-NLS-1$
 	}
 
 	/**
@@ -122,11 +121,11 @@ public class GraphViewerTests {
 		graph.setSelection(new GraphItem[] { n1, n2, c });
 		GraphViewer viewer = new GraphViewer(shell, SWT.NONE);
 		viewer.setControl(graph);
-		assertEquals("No null data should be in the selection", 0, //$NON-NLS-1$
-				((StructuredSelection) viewer.getSelection()).size());
+		assertEquals(0, ((StructuredSelection) viewer.getSelection()).size(),
+				"No null data should be in the selection"); //$NON-NLS-1$
 		n1.setData("1"); //$NON-NLS-1$
 		n2.setData("2"); //$NON-NLS-1$
-		assertEquals("Other data should be in the selection", 2, ((StructuredSelection) viewer.getSelection()).size()); //$NON-NLS-1$
+		assertEquals(2, ((StructuredSelection) viewer.getSelection()).size(), "Other data should be in the selection"); //$NON-NLS-1$
 	}
 
 	/**
@@ -138,7 +137,7 @@ public class GraphViewerTests {
 		final List<SelectionChangedEvent> selected = new ArrayList<>();
 		viewer.addPostSelectionChangedListener(selected::add);
 		viewer.getControl().notifyListeners(SWT.Selection, new Event());
-		assertFalse("Post selection listeners should be notified", selected.isEmpty()); //$NON-NLS-1$
+		assertFalse(selected.isEmpty(), "Post selection listeners should be notified"); //$NON-NLS-1$
 	}
 
 	/**
