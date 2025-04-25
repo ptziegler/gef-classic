@@ -7,6 +7,11 @@ This repository contains the code base of the [Eclipse Graphical Editing Framewo
  
 The code base of the GEF components implemented in JavaFX is located in the [eclipse-gef/gef](https://github.com/eclipse-gef/gef) repository instead.
 
+# Requirements:
+
+- Eclipse 2024-06 or later
+- Java 17 or later
+
 # Update sites:
 
 Update Sites (p2 repositories) are available at:
