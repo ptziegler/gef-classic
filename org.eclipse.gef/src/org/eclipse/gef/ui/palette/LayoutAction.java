@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2024 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -22,9 +22,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.resource.ImageDescriptor;
 
-import org.eclipse.gef.internal.Internal;
+import org.eclipse.gef.internal.InternalImages;
 
 /**
  * This action allows to switch between the various supported layout modes for
@@ -60,7 +59,7 @@ public class LayoutAction extends Action implements IMenuCreator {
 		setMenuCreator(this);
 
 		if (hasIcon) {
-			setImageDescriptor(ImageDescriptor.createFromFile(Internal.class, "icons/palette_layout.png")); //$NON-NLS-1$
+			setImageDescriptor(InternalImages.createDescriptor("icons/palette_layout.svg")); //$NON-NLS-1$
 		}
 
 		setToolTipText(PaletteMessages.LAYOUT_MENU_LABEL);

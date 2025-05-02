@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,7 +14,7 @@ package org.eclipse.gef;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 
-import org.eclipse.gef.internal.Internal;
+import org.eclipse.gef.internal.InternalImages;
 
 /**
  * A class containing shared Images and ImageDescriptors for use by clients.
@@ -73,18 +73,14 @@ public class SharedImages {
 	public static final ImageDescriptor DESC_MARQUEE_TOOL_CONNECTIONS_24;
 
 	static {
-		DESC_SELECTION_TOOL_16 = createDescriptor("icons/arrow16.png"); //$NON-NLS-1$
-		DESC_SELECTION_TOOL_24 = createDescriptor("icons/arrow24.png"); //$NON-NLS-1$
-		DESC_MARQUEE_TOOL_16 = createDescriptor("icons/marquee16.png"); //$NON-NLS-1$
-		DESC_MARQUEE_TOOL_24 = createDescriptor("icons/marquee24.png"); //$NON-NLS-1$
-		DESC_MARQUEE_TOOL_NODES_16 = createDescriptor("icons/marquee_nodes16.png"); //$NON-NLS-1$
-		DESC_MARQUEE_TOOL_NODES_24 = createDescriptor("icons/marquee_nodes24.png"); //$NON-NLS-1$
-		DESC_MARQUEE_TOOL_CONNECTIONS_16 = createDescriptor("icons/marquee_wires16.png"); //$NON-NLS-1$
-		DESC_MARQUEE_TOOL_CONNECTIONS_24 = createDescriptor("icons/marquee_wires24.png"); //$NON-NLS-1$
-	}
-
-	private static ImageDescriptor createDescriptor(String filename) {
-		return ImageDescriptor.createFromFile(Internal.class, filename);
+		DESC_SELECTION_TOOL_16 = InternalImages.createDescriptor("icons/arrow16.svg"); //$NON-NLS-1$
+		DESC_SELECTION_TOOL_24 = InternalImages.createDescriptor("icons/arrow24.svg"); //$NON-NLS-1$
+		DESC_MARQUEE_TOOL_16 = InternalImages.createDescriptor("icons/marquee16.svg"); //$NON-NLS-1$
+		DESC_MARQUEE_TOOL_24 = InternalImages.createDescriptor("icons/marquee24.svg"); //$NON-NLS-1$
+		DESC_MARQUEE_TOOL_NODES_16 = InternalImages.createDescriptor("icons/marquee_nodes16.svg"); //$NON-NLS-1$
+		DESC_MARQUEE_TOOL_NODES_24 = InternalImages.createDescriptor("icons/marquee_nodes24.svg"); //$NON-NLS-1$
+		DESC_MARQUEE_TOOL_CONNECTIONS_16 = InternalImages.createDescriptor("icons/marquee_wires16.svg"); //$NON-NLS-1$
+		DESC_MARQUEE_TOOL_CONNECTIONS_24 = InternalImages.createDescriptor("icons/marquee_wires24.svg"); //$NON-NLS-1$
 	}
 
 }

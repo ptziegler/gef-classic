@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2024 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -18,8 +18,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 
 import org.eclipse.draw2d.Cursors;
 
-import org.eclipse.gef.internal.Internal;
 import org.eclipse.gef.internal.InternalGEFPlugin;
+import org.eclipse.gef.internal.InternalImages;
 
 /**
  * A shared collection of Cursors.
@@ -46,14 +46,14 @@ public class SharedCursors extends Cursors {
 	public static final Cursor CURSOR_TREE_MOVE;
 
 	static {
-		CURSOR_PLUG = createCursor("icons/plug-cursor.png"); //$NON-NLS-1$
-		CURSOR_PLUG_NOT = createCursor("icons/plugnot-cursor.png"); //$NON-NLS-1$
-		CURSOR_TREE_ADD = createCursor("icons/tree_add-cursor.png"); //$NON-NLS-1$
-		CURSOR_TREE_MOVE = createCursor("icons/tree_move-cursor.png"); //$NON-NLS-1$
+		CURSOR_PLUG = createCursor("icons/plug-cursor.svg"); //$NON-NLS-1$
+		CURSOR_PLUG_NOT = createCursor("icons/plugnot-cursor.svg"); //$NON-NLS-1$
+		CURSOR_TREE_ADD = createCursor("icons/tree_add-cursor.svg"); //$NON-NLS-1$
+		CURSOR_TREE_MOVE = createCursor("icons/tree_move-cursor.svg"); //$NON-NLS-1$
 	}
 
 	private static Cursor createCursor(String sourceName) {
-		ImageDescriptor src = ImageDescriptor.createFromFile(Internal.class, sourceName);
+		ImageDescriptor src = InternalImages.createDescriptor(sourceName);
 		int deviceZoom = InternalGEFPlugin.getOrDefaultDeviceZoom();
 		return new Cursor(null, InternalGEFPlugin.scaledImageData(src, deviceZoom), 0, 0);
 	}

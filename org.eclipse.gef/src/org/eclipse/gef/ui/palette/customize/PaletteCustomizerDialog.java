@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2024 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -26,6 +26,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageDataProvider;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -69,7 +70,7 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.widgets.MultiLineLabel;
 
-import org.eclipse.gef.internal.Internal;
+import org.eclipse.gef.internal.InternalImages;
 import org.eclipse.gef.internal.ui.palette.ToolbarDropdownContributionItem;
 import org.eclipse.gef.palette.PaletteEntry;
 import org.eclipse.gef.palette.PaletteRoot;
@@ -689,8 +690,8 @@ public class PaletteCustomizerDialog extends Dialog implements EntryPageContaine
 		cTitle.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		if (titleImage == null) {
-			titleImage = new Image(composite.getDisplay(),
-					ImageDescriptor.createFromFile(Internal.class, "icons/customizer_dialog_title.png").getImageData()); //$NON-NLS-1$
+			ImageDescriptor titleImageDescriptor = InternalImages.createDescriptor("icons/customizer_dialog_title.svg"); //$NON-NLS-1$
+			titleImage = new Image(composite.getDisplay(), (ImageDataProvider) titleImageDescriptor::getImageData);
 			composite.addDisposeListener(e -> {
 				titleImage.dispose();
 				titleImage = null;
@@ -1095,8 +1096,8 @@ public class PaletteCustomizerDialog extends Dialog implements EntryPageContaine
 		public MoveDownAction() {
 			setEnabled(false);
 			setText(PaletteMessages.MOVE_DOWN_LABEL);
-			setImageDescriptor(ImageDescriptor.createFromFile(Internal.class, "icons/next_nav.png"));//$NON-NLS-1$
-			setDisabledImageDescriptor(ImageDescriptor.createFromFile(Internal.class, "icons/move_down_disabled.png"));//$NON-NLS-1$
+			setImageDescriptor(InternalImages.createDescriptor("icons/next_nav.svg"));//$NON-NLS-1$
+			setDisabledImageDescriptor(InternalImages.createDescriptor("icons/move_down_disabled.svg"));//$NON-NLS-1$
 		}
 
 		@Override
@@ -1122,8 +1123,8 @@ public class PaletteCustomizerDialog extends Dialog implements EntryPageContaine
 		public MoveUpAction() {
 			setEnabled(false);
 			setText(PaletteMessages.MOVE_UP_LABEL);
-			setImageDescriptor(ImageDescriptor.createFromFile(Internal.class, "icons/prev_nav.png"));//$NON-NLS-1$
-			setDisabledImageDescriptor(ImageDescriptor.createFromFile(Internal.class, "icons/move_up_disabled.png")); //$NON-NLS-1$
+			setImageDescriptor(InternalImages.createDescriptor("icons/prev_nav.svg"));//$NON-NLS-1$
+			setDisabledImageDescriptor(InternalImages.createDescriptor("icons/move_up_disabled.svg")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -1158,8 +1159,8 @@ public class PaletteCustomizerDialog extends Dialog implements EntryPageContaine
 			}
 
 			setText(PaletteMessages.NEW_LABEL);
-			setImageDescriptor(ImageDescriptor.createFromFile(Internal.class, "icons/add.png")); //$NON-NLS-1$
-			setDisabledImageDescriptor(ImageDescriptor.createFromFile(Internal.class, "icons/add-disabled.png")); //$NON-NLS-1$
+			setImageDescriptor(InternalImages.createDescriptor("icons/add.svg")); //$NON-NLS-1$
+			setDisabledImageDescriptor(InternalImages.createDescriptor("icons/add-disabled.svg")); //$NON-NLS-1$
 		}
 
 		private void addActionToMenu(Menu parent, IAction action) {

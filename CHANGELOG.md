@@ -21,6 +21,8 @@
 
 ## GEF
 
+ - When used with SWT 3.130.0 or newer, the `org.eclipse.swt.svg` bundle (or similar) is required.
+
 ## Zest
 
 # GEF Classic 3.23.0
