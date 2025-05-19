@@ -58,7 +58,13 @@ public final class NativeGraphicsSource implements GraphicsSource {
 
 		// canvas.update() paints too much and only works on Windows. Use
 		// readAndDispatch() to only paint the redraw() event.
-		canvas.getDisplay().readAndDispatch();
+
+		// Running readAndDispatch() might fire a mouseReleased() event while processing
+		// a mousePressed() in e.g. the palette scrollbar. See:
+		// https://github.com/eclipse-gef/gef-classic/issues/733
+		if (Animation.isAnimating()) {
+			canvas.getDisplay().readAndDispatch();
+		}
 		return null;
 	}
 
