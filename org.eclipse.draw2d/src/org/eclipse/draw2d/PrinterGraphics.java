@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2023 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,12 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * A scalable graphics object used to print to a printer.
@@ -43,11 +40,6 @@ public class PrinterGraphics extends ScaledGraphics {
 	public PrinterGraphics(Graphics g, Printer p) {
 		super(g);
 		printer = p;
-	}
-
-	@Override
-	Font createFont(FontData data) {
-		return new Font(printer, data);
 	}
 
 	private Image printerImage(Image image) {
@@ -93,7 +85,7 @@ public class PrinterGraphics extends ScaledGraphics {
 
 	@Override
 	int zoomFontHeight(int height) {
-		return (int) (height * zoom * Display.getCurrent().getDPI().y / printer.getDPI().y + 0.0000001);
+		return (int) (height * zoom * 96 / printer.getDPI().y + 0.0000001);
 	}
 
 	/**
@@ -113,7 +105,7 @@ public class PrinterGraphics extends ScaledGraphics {
 	public void setLineAttributes(LineAttributes attributes) {
 		if (attributes.style == SWT.LINE_CUSTOM && attributes.dash != null && attributes.dash.length > 0) {
 			float[] newDashes = new float[attributes.dash.length];
-			float printerDot = (float) printer.getDPI().y / Display.getCurrent().getDPI().y + 0.0000001f;
+			float printerDot = (float) printer.getDPI().y / 96 + 0.0000001f;
 			for (int i = 0; i < attributes.dash.length; i++) {
 				newDashes[i] = attributes.dash[i] * printerDot;
 			}
@@ -124,6 +116,11 @@ public class PrinterGraphics extends ScaledGraphics {
 		} else {
 			super.setLineAttributes(attributes);
 		}
+	}
+
+	@Override
+	/* package */ Printer getDevice() {
+		return printer;
 	}
 
 }

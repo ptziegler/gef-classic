@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2023 IBM Corporation and others.
+ * Copyright (c) 2000, 2025 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -174,9 +175,8 @@ public class ScaledGraphics extends Graphics {
 		graphics.clipRect(zoomClipRect(r));
 	}
 
-	@SuppressWarnings("static-method")
 	Font createFont(FontData data) {
-		return new Font(Display.getCurrent(), data);
+		return new Font(getDevice(), data);
 	}
 
 	/**
@@ -626,6 +626,11 @@ public class ScaledGraphics extends Graphics {
 		return localLineWidth;
 	}
 
+	@SuppressWarnings("static-method")
+	/* package */ Device getDevice() {
+		return Display.getCurrent();
+	}
+
 	/**
 	 * @see Graphics#getTextAntialias()
 	 */
@@ -930,7 +935,7 @@ public class ScaledGraphics extends Graphics {
 	Font zoomFont(Font f) {
 		if (f == null) {
 			Font localFont = getLocalFont();
-			f = localFont != null ? localFont : Display.getCurrent().getSystemFont();
+			f = localFont != null ? localFont : getDevice().getSystemFont();
 		}
 		FontData data = getCachedFontData(f);
 		int zoomedFontHeight = zoomFontHeight(data.getHeight());
@@ -996,7 +1001,7 @@ public class ScaledGraphics extends Graphics {
 			return null;
 		} 
 
-		TextLayout zoomed = new TextLayout(Display.getCurrent());
+		TextLayout zoomed = new TextLayout(getDevice());
 		zoomed.setText(layout.getText());
 		zoomed.setFont(zoomFont(layout.getFont()));
 		zoomed.setAlignment(layout.getAlignment());
