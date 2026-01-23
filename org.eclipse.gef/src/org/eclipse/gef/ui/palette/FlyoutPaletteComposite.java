@@ -191,7 +191,7 @@ public class FlyoutPaletteComposite extends Composite {
 	public FlyoutPaletteComposite(Composite parent, int style, IWorkbenchPage page, PaletteViewerProvider pvProvider,
 			FlyoutPreferences preferences) {
 		super(parent, style | SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE | SWT.DOUBLE_BUFFERED);
-		InternalDraw2dUtils.configureForAutoscalingMode(this, newScale -> scale = newScale.floatValue());
+		InternalDraw2dUtils.configureForAutoscalingMode(this, newScale -> scale = newScale);
 		scale = InternalDraw2dUtils.calculateScale(this);
 		provider = pvProvider;
 		prefs = preferences;

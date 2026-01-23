@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Yatta and others.
+ * Copyright (c) 2025, 2026 Yatta and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +13,7 @@
 package org.eclipse.draw2d.internal;
 
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -58,13 +59,13 @@ public class InternalDraw2dUtils {
 		return enableAutoScale;
 	}
 
-	public static void configureForAutoscalingMode(Control control, Consumer<Double> zoomConsumer) {
+	public static void configureForAutoscalingMode(Control control, FloatConsumer zoomConsumer) {
 		if (control == null || !isAutoScaleEnabled()) {
 			return;
 		}
 		control.setData(InternalDraw2dUtils.DATA_AUTOSCALE_DISABLED, true);
-		control.addListener(SWT.ZoomChanged, e -> zoomConsumer.accept(e.detail / 100.0));
-		zoomConsumer.accept((double) InternalDraw2dUtils.calculateScale(control));
+		control.addListener(SWT.ZoomChanged, e -> zoomConsumer.accept(e.detail / 100.0f));
+		zoomConsumer.accept(InternalDraw2dUtils.calculateScale(control));
 	}
 
 	public static void setPropagateAutoScaleDisabled(Control control, boolean propagate) {
@@ -89,5 +90,14 @@ public class InternalDraw2dUtils {
 		}
 		// returning float allows us to round it to int via Math.round(...)
 		return shellZoom / 100.0f;
+	}
+
+	/**
+	 * Similar to the {@link DoubleConsumer}, implementing a {@link Consumer} on a
+	 * primitive datatype.
+	 */
+	@FunctionalInterface
+	public static interface FloatConsumer {
+		void accept(float f);
 	}
 }
