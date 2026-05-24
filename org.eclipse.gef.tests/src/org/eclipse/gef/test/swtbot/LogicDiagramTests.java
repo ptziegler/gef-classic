@@ -18,10 +18,21 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.ICoolBarManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.ToolBarContributionItem;
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.gef.finder.matchers.IsInstanceOf;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefViewer;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.WorkbenchWindow;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
@@ -282,9 +293,26 @@ public class LogicDiagramTests extends AbstractSWTBotEditorTests {
 		List<SWTBotGefEditPart> editParts = initAlignTest("Circuit", "V+");
 		IFigure first = ((LogicEditPart) editParts.get(0).part()).getFigure();
 		IFigure second = ((LogicEditPart) editParts.get(1).part()).getFigure();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
+		ICoolBarManager coolBar = ((WorkbenchWindow) window).getCoolBarManager2();
+
+		for (IContributionItem coolItem : coolBar.getItems()) {
+
+			if (coolItem instanceof ToolBarContributionItem tbItem) {
+
+				IToolBarManager tbManager = tbItem.getToolBarManager();
+
+				for (IContributionItem item : tbManager.getItems()) {
+					if (item instanceof ActionContributionItem acItem) {
+						System.out.println("Toolbar item: " + item.getId() + ", " + acItem.getAction().getToolTipText()
+								+ ", " + (acItem.getWidget().getStyle() & SWT.PUSH));
+					}
+				}
+			}
+		}
 		assertNotEquals(first.getBounds().bottom(), second.getBounds().bottom());
-		bot.toolbarButtonWithTooltip("Align Bottom").click();
+		new SWTWorkbenchBot().toolbarButtonWithTooltip("Align Bottom").click();
 		waitEventLoop(0);
 		assertEquals(first.getBounds().bottom(), second.getBounds().bottom());
 	}
