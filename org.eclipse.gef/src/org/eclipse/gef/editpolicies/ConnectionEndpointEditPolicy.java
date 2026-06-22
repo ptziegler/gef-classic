@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -31,6 +31,7 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.NodeEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.handles.ConnectionEndpointHandle;
 import org.eclipse.gef.requests.ReconnectRequest;
 
@@ -98,9 +99,17 @@ public class ConnectionEndpointEditPolicy extends SelectionHandlesEditPolicy {
 			}
 			PointList points = getConnection().getPoints().getCopy();
 			getConnection().translateToAbsolute(points);
-			points = StrokePointList.strokeList(points, 5);
+			points = StrokePointList.strokeList(points, (int) (getZoom() * 5));
 			translateToRelative(points);
 			setPoints(points);
+		}
+
+		private double getZoom() {
+			ZoomManager zoomManager = (ZoomManager) getHost().getViewer().getProperty(ZoomManager.class.toString());
+			if (zoomManager == null) {
+				return 1.0;
+			}
+			return zoomManager.getZoom();
 		}
 	}
 
