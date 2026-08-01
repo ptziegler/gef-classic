@@ -13,7 +13,6 @@
 
 package org.eclipse.draw2d.test;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
@@ -21,18 +20,17 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.PathData;
 import org.eclipse.swt.widgets.Display;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.ScaledGraphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.test.utils.GraphicsRecorder;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -53,34 +51,32 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testTranlsationWithMulipleScaledLayers() {
-		Display display = Display.getDefault();
-		Image image = new Image(display, 100, 100);
-		GC gc = new GC(image);
-		RecordingSwtGraphics recorder = new RecordingSwtGraphics(gc);
-		Graphics graphics = createGraphics(recorder);
+		GraphicsRecorder actualRecorder = new GraphicsRecorder();
+		Graphics graphics = createGraphics(actualRecorder);
 		graphics.scale(1.5);
 		graphics.translate(1f, 1f);
 		Graphics graphics2 = createGraphics(graphics);
 		graphics2.scale(2.5);
 		graphics2.translate(1f, 1f);
-
 		graphics2.drawRectangle(0, 0, 10, 10);
-		assertEquals(5, recorder.translation.x);
-		assertEquals(5, recorder.translation.y);
 
-		validateDrawRectangle(recorder, new Rectangle(5, 5, 37, 37));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.translate(1, 1);
+		expectedRecorder.translate(4, 4);
+		expectedRecorder.drawRectangle(0, 0, 37, 37);
+		expectedRecorder.assertEquals(actualRecorder);
 		graphics2.dispose();
 		graphics.dispose();
-		recorder.dispose();
-		gc.dispose();
-		image.dispose();
+		actualRecorder.dispose();
 	}
 
 	@Test
 	public void testDrawLineForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawLine(new Point(5, 5), new Point(5, 5 + 20)));
-		validateDrawLine(swtGraphics, new Point(30, 30));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawLine(30, 30, 30, 130);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -114,9 +110,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testDrawOvalForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawOval(5, 7, 9, 25));
-		validateDrawOval(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawOval(30, 40, 45, 125);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -149,9 +147,10 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testDrawPointForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
-				graphics -> graphics.drawPoint(5, 5));
-		validateDrawPoint(swtGraphics, new Point(30, 30));
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.drawPoint(5, 5));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawPoint(30, 30);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -170,15 +169,17 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testDrawArcForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawArc(5, 7, 9, 25, 12, 18));
-		validateDrawArc(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawArc(new Rectangle(30, 40, 45, 125), 12, 18);
+		expectedRecorder.assertEquals(actualRecorder);
 
-		swtGraphics = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.drawArc(0, 0, 0, 0, 12, 18));
-		validateDrawArc(swtGraphics, new Rectangle(0, 0, 0, 0));
+		actualRecorder = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.drawArc(0, 0, 0, 0, 12, 18));
+		actualRecorder.assertEmpty();
 
-		swtGraphics = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.drawArc(5, 7, 9, 25, 12, 0));
-		validateDrawArc(swtGraphics, new Rectangle(0, 0, 0, 0));
+		actualRecorder = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.drawArc(5, 7, 9, 25, 12, 0));
+		actualRecorder.assertEmpty();
 	}
 
 	@ParameterizedTest
@@ -213,9 +214,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testDrawFocusForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawFocus(5, 7, 9, 25));
-		validateDrawFocus(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawFocus(30, 40, 45, 125);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -250,9 +253,11 @@ public abstract class GraphicsTest {
 	@Test
 	public void testDrawFullImageForRegression() {
 		Image image = new Image(Display.getDefault(), 9, 25);
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawImage(image, 5, 7));
-		validateDrawImage(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawImage(image, 0, 0, 9, 25, 30, 40, 45, 125);
+		expectedRecorder.assertEquals(actualRecorder);
 		image.dispose();
 	}
 
@@ -295,9 +300,11 @@ public abstract class GraphicsTest {
 	@Test
 	public void testDrawImageForRegression() {
 		Image image = new Image(Display.getDefault(), 5, 5);
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawImage(image, 5, 5, 5, 5, 5, 7, 9, 25));
-		validateDrawImage(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawImage(image, 5, 5, 5, 5, 30, 40, 45, 125);
+		expectedRecorder.assertEquals(actualRecorder);
 		image.dispose();
 	}
 
@@ -399,9 +406,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testDrawRectangleForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawRectangle(5, 7, 9, 25));
-		validateDrawRectangle(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawRectangle(30, 40, 45, 125);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -435,9 +444,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testDrawRoundRectangleForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.drawRoundRectangle(new Rectangle(5, 7, 9, 25), 5, 5));
-		validateDrawRoundRectangle(swtGraphics, new Rectangle(30, 40, 45, 125), new Point(25, 25));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.drawRoundRectangle(new Rectangle(30, 40, 45, 125), 25, 25);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -458,9 +469,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testFillOvalForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.fillOval(5, 7, 9, 25));
-		validateFillOval(swtGraphics, new Rectangle(30, 40, 41, 121));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.fillOval(30, 40, 41, 121);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -493,15 +506,17 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testFillArcForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.fillArc(5, 7, 9, 25, 12, 18));
-		validateFillArc(swtGraphics, new Rectangle(30, 40, 41, 121));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.fillArc(30, 40, 41, 121, 12, 18);
+		expectedRecorder.assertEquals(actualRecorder);
 
-		swtGraphics = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.fillArc(0, 0, 0, 0, 12, 18));
-		validateFillArc(swtGraphics, new Rectangle(0, 0, 0, 0));
+		actualRecorder = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.fillArc(0, 0, 0, 0, 12, 18));
+		actualRecorder.assertEmpty();
 
-		swtGraphics = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.fillArc(5, 7, 9, 25, 12, 0));
-		validateFillArc(swtGraphics, new Rectangle(0, 0, 0, 0));
+		actualRecorder = executeTranslatedWithOneLayer(200, 250, graphics -> graphics.fillArc(5, 7, 9, 25, 12, 0));
+		actualRecorder.assertEmpty();
 	}
 
 	@ParameterizedTest
@@ -536,9 +551,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testFillGradientForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.fillGradient(5, 7, 9, 25, true));
-		validateFillGradient(swtGraphics, new Rectangle(30, 40, 41, 121));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.fillGradient(30, 40, 41, 121, true);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -629,9 +646,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testFillRectangleForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.fillRectangle(5, 7, 9, 25));
-		validateFillRectangle(swtGraphics, new Rectangle(30, 40, 41, 121));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.fillRectangle(30, 40, 41, 121);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -665,9 +684,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testFillRoundRectangleForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.fillRoundRectangle(new Rectangle(5, 7, 9, 25), 5, 5));
-		validateFillRoundRectangle(swtGraphics, new Rectangle(30, 40, 41, 121), new Point(25, 25));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.fillRoundRectangle(new Rectangle(30, 40, 41, 121), 25, 25);
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -688,9 +709,11 @@ public abstract class GraphicsTest {
 
 	@Test
 	public void testClipRectForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.clipRect(new Rectangle(5, 7, 9, 25)));
-		validateClipRect(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.clipRect(new Rectangle(30, 40, 45, 125));
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -711,7 +734,7 @@ public abstract class GraphicsTest {
 	public void testGetClipRectForRegression() {
 		Rectangle clipRect = new Rectangle();
 		executeTranslatedWithOneLayer(200, 250, graphics -> graphics.getClip(clipRect),
-				graphics -> graphics.clipRect = new Rectangle(25, 35, 45, 125));
+				graphics -> graphics.setClip(new Rectangle(25, 35, 45, 125)));
 		validateRect(clipRect, new Rectangle(5, 7, 9, 25));
 	}
 
@@ -720,11 +743,11 @@ public abstract class GraphicsTest {
 	public void testGetClipRectWithRectangle(int source, int monitorZoom, int diagramZoom) {
 		Rectangle clipRectOne = new Rectangle();
 		executeWithOneLayer(monitorZoom, diagramZoom, graphics -> graphics.getClip(clipRectOne),
-				graphics -> graphics.clipRect = new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15));
+				graphics -> graphics.setClip(new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15)));
 
 		Rectangle clipRectTwo = new Rectangle();
 		executeWithTwoLayers(monitorZoom, diagramZoom, graphics -> graphics.getClip(clipRectTwo),
-				graphics -> graphics.clipRect = new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15));
+				graphics -> graphics.setClip(new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15)));
 		validateRect(clipRectTwo, clipRectOne);
 	}
 
@@ -733,19 +756,21 @@ public abstract class GraphicsTest {
 	public void testGetClipRectWithRectangleTranslated(int source, int monitorZoom, int diagramZoom) {
 		Rectangle clipRectOne = new Rectangle();
 		executeTranslatedWithOneLayer(monitorZoom, diagramZoom, graphics -> graphics.getClip(clipRectOne),
-				graphics -> graphics.clipRect = new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15));
+				graphics -> graphics.setClip(new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15)));
 
 		Rectangle clipRectTwo = new Rectangle();
 		executeTranslatedWithTwoLayers(monitorZoom, diagramZoom, graphics -> graphics.getClip(clipRectTwo),
-				graphics -> graphics.clipRect = new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15));
+				graphics -> graphics.setClip(new Rectangle(source * 10, source * 10, source * 10, source * 10 + 15)));
 		validateRect(clipRectTwo, clipRectOne);
 	}
 
 	@Test
 	public void testSetClipRectForRegression() {
-		RecordingSwtGraphics swtGraphics = executeTranslatedWithOneLayer(200, 250,
+		GraphicsRecorder actualRecorder = executeTranslatedWithOneLayer(200, 250,
 				graphics -> graphics.setClip(new Rectangle(5, 7, 9, 25)));
-		validateSetClipRect(swtGraphics, new Rectangle(30, 40, 45, 125));
+		GraphicsRecorder expectedRecorder = new GraphicsRecorder();
+		expectedRecorder.setClip(new Rectangle(30, 40, 45, 125));
+		expectedRecorder.assertEquals(actualRecorder);
 	}
 
 	@ParameterizedTest
@@ -773,39 +798,17 @@ public abstract class GraphicsTest {
 		}
 
 		public void execute(Consumer<Graphics> graphicsCall) {
-			RecordingSwtGraphics graphics1 = executeWithOneLayer(monitorZoom, diagramZoom, graphicsCall);
-			RecordingSwtGraphics graphics2 = executeWithTwoLayers(monitorZoom, diagramZoom, graphicsCall);
+			GraphicsRecorder graphics1 = executeWithOneLayer(monitorZoom, diagramZoom, graphicsCall);
+			GraphicsRecorder graphics2 = executeWithTwoLayers(monitorZoom, diagramZoom, graphicsCall);
 
-			validate(graphics1, graphics2);
+			graphics2.assertEquals(graphics1);
 		}
 
 		public void executeTranslated(Consumer<Graphics> graphicsCall) {
-			RecordingSwtGraphics graphics1 = executeTranslatedWithOneLayer(monitorZoom, diagramZoom, graphicsCall);
-			RecordingSwtGraphics graphics2 = executeTranslatedWithTwoLayers(monitorZoom, diagramZoom, graphicsCall);
+			GraphicsRecorder graphics1 = executeTranslatedWithOneLayer(monitorZoom, diagramZoom, graphicsCall);
+			GraphicsRecorder graphics2 = executeTranslatedWithTwoLayers(monitorZoom, diagramZoom, graphicsCall);
 
-			validate(graphics1, graphics2);
-		}
-
-		private static void validate(RecordingSwtGraphics graphics1, RecordingSwtGraphics graphics2) {
-			validateClipRect(graphics2, graphics1.clipRect);
-			validateSetClipRect(graphics2, graphics1.setClipRect);
-			validateDrawLine(graphics2, graphics1.drawLine);
-			validateDrawOval(graphics2, graphics1.drawOval);
-			validateDrawArc(graphics2, graphics1.drawArc);
-			validateDrawFocus(graphics2, graphics1.drawFocus);
-			validateDrawImage(graphics2, graphics1.drawImage);
-			validateDrawPath(graphics2, graphics1.drawPathData);
-			validateDrawPoint(graphics2, graphics1.drawPoint);
-			validateDrawPolygon(graphics2, graphics1.drawPolygon);
-			validateDrawRectangle(graphics2, graphics1.drawRectangle);
-			validateDrawRoundRectangle(graphics2, graphics1.drawRoundRectangle, graphics1.drawRoundRectangleArc);
-			validateFillArc(graphics2, graphics1.fillArc);
-			validateFillGradient(graphics2, graphics1.fillGradient);
-			validateFillOval(graphics2, graphics1.fillOval);
-			validateFillPath(graphics2, graphics1.fillPathData);
-			validateFillPolygon(graphics2, graphics1.fillPolygon);
-			validateFillRectangle(graphics2, graphics1.fillRectangle);
-			validateFillRoundRectangle(graphics2, graphics1.fillRoundRectangle, graphics1.fillRoundRectangleArc);
+			graphics2.assertEquals(graphics1);
 		}
 	}
 
@@ -818,162 +821,51 @@ public abstract class GraphicsTest {
 				String.format("Actual value for height must match value %s", expected.height)); //$NON-NLS-1$
 	}
 
-	private static void validatePoint(Point actual, Point expected) {
-		assertEquals(expected.x, actual.x, String.format("Actual value for x1 must match value %s", expected.x)); //$NON-NLS-1$
-		assertEquals(expected.y, actual.y, String.format("Actual value for y1 must match value %s", expected.y)); //$NON-NLS-1$
-	}
-
-	private static void validateClipRect(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.clipRect, expected);
-	}
-
-	private static void validateSetClipRect(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.setClipRect, expected);
-	}
-
-	private static void validateDrawImage(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.drawImage, expected);
-	}
-
-	private static void validateDrawLine(RecordingSwtGraphics graphics, Point expected) {
-		validatePoint(graphics.drawLine, expected);
-	}
-
-	private static void validateDrawOval(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.drawOval, expected);
-	}
-
-	private static void validateDrawArc(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.drawArc, expected);
-	}
-
-	private static void validateDrawFocus(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.drawFocus, expected);
-	}
-
-	private static void validateDrawPath(RecordingSwtGraphics graphics, PathData pathData) {
-		assertArrayEquals(pathData.points, graphics.drawPathData.points, 0.005f,
-				String.format("drawPath: Scaled value for path data must match value %s", pathData.points)); //$NON-NLS-1$
-	}
-
-	private static void validateDrawPoint(RecordingSwtGraphics graphics, Point expected) {
-		validatePoint(graphics.drawPoint, expected);
-	}
-
-	private static void validateDrawPolygon(RecordingSwtGraphics graphics, int[] polygon) {
-		assertArrayEquals(polygon, graphics.drawPolygon,
-				String.format("drawFocus: Scaled value for polygon must match value %s", polygon)); //$NON-NLS-1$
-	}
-
-	private static void validateDrawRectangle(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.drawRectangle, expected);
-	}
-
-	private static void validateDrawRoundRectangle(RecordingSwtGraphics graphics, Rectangle expected,
-			Point expectedArc) {
-		validateRect(graphics.drawRoundRectangle, expected);
-		assertEquals(expectedArc.x, graphics.drawRoundRectangleArc.x,
-				String.format("drawRoundRectangle: Scaled value for arc width must match value %s", expectedArc.x)); //$NON-NLS-1$
-		assertEquals(expectedArc.y, graphics.drawRoundRectangleArc.y,
-				String.format("drawRoundRectangle: Scaled value for arc height must match value %s", expectedArc.y)); //$NON-NLS-1$
-	}
-
-	private static void validateFillArc(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.fillArc, expected);
-	}
-
-	private static void validateFillGradient(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.fillGradient, expected);
-	}
-
-	private static void validateFillOval(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.fillOval, expected);
-	}
-
-	private static void validateFillPath(RecordingSwtGraphics graphics, PathData pathData) {
-		// check fillPath
-		assertArrayEquals(pathData.points, graphics.fillPathData.points, 0.005f,
-				String.format("fillPath: Scaled value for path data must match value %s", pathData.points)); //$NON-NLS-1$
-	}
-
-	private static void validateFillPolygon(RecordingSwtGraphics graphics, int[] polygon) {
-		// check fillPolygon
-		assertArrayEquals(polygon, graphics.fillPolygon,
-				String.format("fillFocus: Scaled value for polygon must match value %s", polygon)); //$NON-NLS-1$
-	}
-
-	private static void validateFillRectangle(RecordingSwtGraphics graphics, Rectangle expected) {
-		validateRect(graphics.fillRectangle, expected);
-	}
-
-	private static void validateFillRoundRectangle(RecordingSwtGraphics graphics, Rectangle expected,
-			Point expectedArc) {
-		validateRect(graphics.fillRoundRectangle, expected);
-		assertEquals(expectedArc.x, graphics.fillRoundRectangleArc.x,
-				String.format("fillRoundRectangle: Scaled value for arc width must match value %s", expectedArc.x)); //$NON-NLS-1$
-		assertEquals(expectedArc.y, graphics.fillRoundRectangleArc.y,
-				String.format("fillRoundRectangle: Scaled value for arc height must match value %s", expectedArc.y)); //$NON-NLS-1$
-	}
-
-	private RecordingSwtGraphics executeWithOneLayer(int monitorZoom, int diagramZoom,
-			Consumer<Graphics> graphicsCall) {
+	private GraphicsRecorder executeWithOneLayer(int monitorZoom, int diagramZoom, Consumer<Graphics> graphicsCall) {
 		return executeWithOneLayer(monitorZoom, diagramZoom, graphicsCall, graphics -> {
 		});
 	}
 
-	private RecordingSwtGraphics executeWithOneLayer(int monitorZoom, int diagramZoom, Consumer<Graphics> graphicsCall,
-			Consumer<RecordingSwtGraphics> initializeGraphics) {
-		Display display = Display.getDefault();
-		Image image = new Image(display, 100, 100);
-		GC gc = new GC(image);
-		RecordingSwtGraphics recorder = new RecordingSwtGraphics(gc);
+	private GraphicsRecorder executeWithOneLayer(int monitorZoom, int diagramZoom, Consumer<Graphics> graphicsCall,
+			Consumer<GraphicsRecorder> initializeGraphics) {
+		GraphicsRecorder recorder = new GraphicsRecorder();
 		initializeGraphics.accept(recorder);
 		Graphics graphics = createGraphics(recorder);
 		graphics.scale(monitorZoom / 100d * diagramZoom / 100d);
 		graphicsCall.accept(graphics);
 		graphics.dispose();
 		recorder.dispose();
-		gc.dispose();
-		image.dispose();
 		return recorder;
 	}
 
-	private RecordingSwtGraphics executeTranslatedWithOneLayer(int monitorZoom, int diagramZoom,
+	private GraphicsRecorder executeTranslatedWithOneLayer(int monitorZoom, int diagramZoom,
 			Consumer<Graphics> graphicsCall) {
 		return executeTranslatedWithOneLayer(monitorZoom, diagramZoom, graphicsCall, graphics -> {
 		});
 	}
 
-	private RecordingSwtGraphics executeTranslatedWithOneLayer(int monitorZoom, int diagramZoom,
-			Consumer<Graphics> graphicsCall, Consumer<RecordingSwtGraphics> initializeGraphics) {
-		Display display = Display.getDefault();
-		Image image = new Image(display, 100, 100);
-		GC gc = new GC(image);
-		RecordingSwtGraphics recorder = new RecordingSwtGraphics(gc);
+	private GraphicsRecorder executeTranslatedWithOneLayer(int monitorZoom, int diagramZoom,
+			Consumer<Graphics> graphicsCall, Consumer<GraphicsRecorder> initializeGraphics) {
+		GraphicsRecorder recorder = new GraphicsRecorder();
 		initializeGraphics.accept(recorder);
 		Graphics graphics = createGraphics(recorder);
 		graphics.scale(monitorZoom / 100d * diagramZoom / 100d);
 		graphics.translate(1f, 1f);
+		recorder.clear();
 		graphicsCall.accept(graphics);
 		graphics.dispose();
 		recorder.dispose();
-		gc.dispose();
-		image.dispose();
 		return recorder;
 	}
 
-	private RecordingSwtGraphics executeWithTwoLayers(int monitorZoom, int diagramZoom,
-			Consumer<Graphics> graphicsCall) {
+	private GraphicsRecorder executeWithTwoLayers(int monitorZoom, int diagramZoom, Consumer<Graphics> graphicsCall) {
 		return executeWithTwoLayers(monitorZoom, diagramZoom, graphicsCall, graphics -> {
 		});
 	}
 
-	private RecordingSwtGraphics executeWithTwoLayers(int monitorZoom, int diagramZoom, Consumer<Graphics> graphicsCall,
-			Consumer<RecordingSwtGraphics> initializeGraphics) {
-		Display display = Display.getDefault();
-		Image image = new Image(display, 100, 100);
-		GC gc = new GC(image);
-		RecordingSwtGraphics recorder = new RecordingSwtGraphics(gc);
+	private GraphicsRecorder executeWithTwoLayers(int monitorZoom, int diagramZoom, Consumer<Graphics> graphicsCall,
+			Consumer<GraphicsRecorder> initializeGraphics) {
+		GraphicsRecorder recorder = new GraphicsRecorder();
 		initializeGraphics.accept(recorder);
 		Graphics graphics = createGraphics(recorder);
 		graphics.scale(monitorZoom / 100d);
@@ -983,35 +875,29 @@ public abstract class GraphicsTest {
 		graphics2.dispose();
 		graphics.dispose();
 		recorder.dispose();
-		gc.dispose();
-		image.dispose();
 		return recorder;
 	}
 
-	private RecordingSwtGraphics executeTranslatedWithTwoLayers(int monitorZoom, int diagramZoom,
+	private GraphicsRecorder executeTranslatedWithTwoLayers(int monitorZoom, int diagramZoom,
 			Consumer<Graphics> graphicsCall) {
 		return executeTranslatedWithTwoLayers(monitorZoom, diagramZoom, graphicsCall, graphics -> {
 		});
 	}
 
-	private RecordingSwtGraphics executeTranslatedWithTwoLayers(int monitorZoom, int diagramZoom,
-			Consumer<Graphics> graphicsCall, Consumer<RecordingSwtGraphics> initializeGraphics) {
-		Display display = Display.getDefault();
-		Image image = new Image(display, 100, 100);
-		GC gc = new GC(image);
-		RecordingSwtGraphics recorder = new RecordingSwtGraphics(gc);
+	private GraphicsRecorder executeTranslatedWithTwoLayers(int monitorZoom, int diagramZoom,
+			Consumer<Graphics> graphicsCall, Consumer<GraphicsRecorder> initializeGraphics) {
+		GraphicsRecorder recorder = new GraphicsRecorder();
 		initializeGraphics.accept(recorder);
 		Graphics graphics = createGraphics(recorder);
 		graphics.scale(monitorZoom / 100d);
 		Graphics graphics2 = createGraphics(graphics);
 		graphics2.scale(diagramZoom / 100d);
 		graphics2.translate(1f, 1f);
+		recorder.clear();
 		graphicsCall.accept(graphics2);
 		graphics2.dispose();
 		graphics.dispose();
 		recorder.dispose();
-		gc.dispose();
-		image.dispose();
 		return recorder;
 	}
 
@@ -1019,195 +905,6 @@ public abstract class GraphicsTest {
 	 * Creates and returns a new instance of the Graphics object to be tested.
 	 */
 	protected abstract Graphics createGraphics(Graphics recorder);
-
-	private static class RecordingSwtGraphics extends SWTGraphics {
-
-		Point translation = new Point();
-		Rectangle clipRect = new Rectangle();
-		Rectangle setClipRect = new Rectangle();
-		Rectangle drawArc = new Rectangle();
-		Rectangle drawFocus = new Rectangle();
-		Rectangle drawImage = new Rectangle();
-		Point drawLine = new Point();
-		Rectangle drawOval = new Rectangle();
-		Point drawPoint = new Point();
-		Rectangle drawRectangle = new Rectangle();
-		Rectangle drawRoundRectangle = new Rectangle();
-		Point drawRoundRectangleArc = new Point();
-		PathData drawPathData = new PathData();
-		int[] drawPolygon = {};
-		Rectangle fillArc = new Rectangle();
-		Rectangle fillGradient = new Rectangle();
-		Rectangle fillOval = new Rectangle();
-		Rectangle fillRectangle = new Rectangle();
-		Rectangle fillRoundRectangle = new Rectangle();
-		Point fillRoundRectangleArc = new Point();
-		PathData fillPathData = new PathData();
-		int[] fillPolygon = {};
-
-		public RecordingSwtGraphics(GC gc) {
-			super(gc);
-			drawPathData.points = new float[0];
-			fillPathData.points = new float[0];
-		}
-
-		@Override
-		public void translate(int dx, int dy) {
-			translation.setX(translation.x + dx);
-			translation.setY(translation.y + dy);
-		}
-
-		@Override
-		public Rectangle getClip(Rectangle rect) {
-			// getClip does not utilize the fractional values of ScaledGraphics, so we must
-			// ignore the translation here
-			rect.setX(clipRect.x);
-			rect.setY(clipRect.y);
-			rect.setWidth(clipRect.width);
-			rect.setHeight(clipRect.height);
-			return rect;
-		}
-
-		@Override
-		public void clipRect(Rectangle rect) {
-			clipRect.setX(rect.x + translation.x);
-			clipRect.setY(rect.y + translation.y);
-			clipRect.setWidth(rect.width);
-			clipRect.setHeight(rect.height);
-		}
-
-		@Override
-		public void setClip(Rectangle rect) {
-			setClipRect.setX(rect.x + translation.x);
-			setClipRect.setY(rect.y + translation.y);
-			setClipRect.setWidth(rect.width);
-			setClipRect.setHeight(rect.height);
-		}
-
-		@Override
-		public void drawArc(int x, int y, int width, int height, int offset, int length) {
-			drawArc.setX(x + translation.x);
-			drawArc.setY(y + translation.y);
-			drawArc.setWidth(width);
-			drawArc.setHeight(height);
-		}
-
-		@Override
-		public void drawPoint(int x, int y) {
-			drawPoint.setX(x + translation.x);
-			drawPoint.setY(y + translation.y);
-		}
-
-		@Override
-		public void drawFocus(int x, int y, int w, int h) {
-			drawFocus.setX(x + translation.x);
-			drawFocus.setY(y + translation.y);
-			drawFocus.setWidth(w);
-			drawFocus.setHeight(h);
-		}
-
-		@Override
-		public void drawImage(Image srcImage, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
-			drawImage.setX(x2 + translation.x);
-			drawImage.setY(y2 + translation.y);
-			drawImage.setWidth(w2);
-			drawImage.setHeight(h2);
-		}
-
-		@Override
-		public void drawLine(int x1, int y1, int x2, int y2) {
-			drawLine.setX(x1 + translation.x);
-			drawLine.setY(y1 + translation.y);
-		}
-
-		@Override
-		public void drawOval(int x, int y, int width, int height) {
-			drawOval.setX(x + translation.x);
-			drawOval.setY(y + translation.y);
-			drawOval.setWidth(width);
-			drawOval.setHeight(height);
-		}
-
-		@Override
-		public void drawPath(Path path) {
-			drawPathData = path.getPathData();
-		}
-
-		@Override
-		public void drawPolygon(int[] points) {
-			drawPolygon = points;
-		}
-
-		@Override
-		public void drawRectangle(int x, int y, int width, int height) {
-			drawRectangle.setX(x + translation.x);
-			drawRectangle.setY(y + translation.y);
-			drawRectangle.setWidth(width);
-			drawRectangle.setHeight(height);
-		}
-
-		@Override
-		public void drawRoundRectangle(Rectangle r, int arcWidth, int arcHeight) {
-			drawRoundRectangle.setX(r.x + translation.x);
-			drawRoundRectangle.setY(r.y + translation.y);
-			drawRoundRectangle.setWidth(r.width);
-			drawRoundRectangle.setHeight(r.height);
-			drawRoundRectangleArc.setX(arcWidth);
-			drawRoundRectangleArc.setY(arcHeight);
-		}
-
-		@Override
-		public void fillArc(int x, int y, int width, int height, int offset, int length) {
-			fillArc.setX(x + translation.x);
-			fillArc.setY(y + translation.y);
-			fillArc.setWidth(width);
-			fillArc.setHeight(height);
-		}
-
-		@Override
-		public void fillGradient(int x, int y, int w, int h, boolean vertical) {
-			fillGradient.setX(x + translation.x);
-			fillGradient.setY(y + translation.y);
-			fillGradient.setWidth(w);
-			fillGradient.setHeight(h);
-		}
-
-		@Override
-		public void fillOval(int x, int y, int width, int height) {
-			fillOval.setX(x + translation.x);
-			fillOval.setY(y + translation.y);
-			fillOval.setWidth(width);
-			fillOval.setHeight(height);
-		}
-
-		@Override
-		public void fillPath(Path path) {
-			fillPathData = path.getPathData();
-		}
-
-		@Override
-		public void fillPolygon(int[] points) {
-			fillPolygon = points;
-		}
-
-		@Override
-		public void fillRectangle(int x, int y, int width, int height) {
-			fillRectangle.setX(x + translation.x);
-			fillRectangle.setY(y + translation.y);
-			fillRectangle.setWidth(width);
-			fillRectangle.setHeight(height);
-		}
-
-		@Override
-		public void fillRoundRectangle(Rectangle r, int arcWidth, int arcHeight) {
-			fillRoundRectangle.setX(r.x + translation.x);
-			fillRoundRectangle.setY(r.y + translation.y);
-			fillRoundRectangle.setWidth(r.width);
-			fillRoundRectangle.setHeight(r.height);
-			fillRoundRectangleArc.setX(arcWidth);
-			fillRoundRectangleArc.setY(arcHeight);
-		}
-	}
 
 	public static class ScaledGraphicsTest extends GraphicsTest {
 		@Override
