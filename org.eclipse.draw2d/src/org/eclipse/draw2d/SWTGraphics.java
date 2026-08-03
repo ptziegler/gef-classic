@@ -188,10 +188,14 @@ public class SWTGraphics extends Graphics {
 		Pattern fgPattern;
 
 		@Override
-		public State clone() throws CloneNotSupportedException {
-			State clone = (State) super.clone();
-			clone.lineAttributes = SWTGraphics.clone(clone.lineAttributes);
-			return clone;
+		public State clone() {
+			try {
+				State clone = (State) super.clone();
+				clone.lineAttributes = SWTGraphics.clone(clone.lineAttributes);
+				return clone;
+			} catch (CloneNotSupportedException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		/**
@@ -942,27 +946,23 @@ public class SWTGraphics extends Graphics {
 					"a way that cannot be saved and restored."); //$NON-NLS-1$
 		}
 
-		try {
-			State s;
-			currentState.dx = translateX;
-			currentState.dy = translateY;
+		State s;
+		currentState.dx = translateX;
+		currentState.dy = translateY;
 
-			if (elementsNeedUpdate) {
-				elementsNeedUpdate = false;
-				currentState.affineMatrix = new float[6];
-				transform.getElements(currentState.affineMatrix);
-			}
-			if (stack.size() > stackPointer) {
-				s = stack.get(stackPointer);
-				s.copyFrom(currentState);
-			} else {
-				stack.add(currentState.clone());
-			}
-			sharedClipping = true;
-			stackPointer++;
-		} catch (CloneNotSupportedException e) {
-			throw new RuntimeException(e);
+		if (elementsNeedUpdate) {
+			elementsNeedUpdate = false;
+			currentState.affineMatrix = new float[6];
+			transform.getElements(currentState.affineMatrix);
 		}
+		if (stack.size() > stackPointer) {
+			s = stack.get(stackPointer);
+			s.copyFrom(currentState);
+		} else {
+			stack.add(currentState.clone());
+		}
+		sharedClipping = true;
+		stackPointer++;
 	}
 
 	private static void reconcileHints(GC gc, int applied, int hints) {
