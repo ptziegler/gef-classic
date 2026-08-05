@@ -51,10 +51,7 @@ public class CompoundTextCommand extends Command implements TextCommand, Appenda
 			return false;
 		}
 		for (Command cmd : pending) {
-			if (cmd == null) {
-				return false;
-			}
-			if (!cmd.canExecute()) {
+			if ((cmd == null) || !cmd.canExecute()) {
 				return false;
 			}
 		}

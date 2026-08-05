@@ -195,10 +195,7 @@ class RankSorter {
 	boolean swap(int i) {
 		Node left = rank.get(i);
 		Node right = rank.get(i + 1);
-		if (GraphUtilities.isConstrained(left, right)) {
-			return false;
-		}
-		if (left.sortValue <= right.sortValue) {
+		if (GraphUtilities.isConstrained(left, right) || (left.sortValue <= right.sortValue)) {
 			return false;
 		}
 		rank.set(i, right);

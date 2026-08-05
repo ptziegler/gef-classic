@@ -1406,11 +1406,7 @@ public class Graph extends FigureCanvas implements IContainer2 {
 
 	@SuppressWarnings("removal")
 	private void applyLayoutInternal(boolean clean) {
-		if (internalGetLayoutContext().getLayoutAlgorithm() == null) {
-			return;
-		}
-
-		if (this.getNodes().isEmpty()) {
+		if ((internalGetLayoutContext().getLayoutAlgorithm() == null) || this.getNodes().isEmpty()) {
 			return;
 		}
 		scheduledLayoutClean = scheduledLayoutClean || clean;

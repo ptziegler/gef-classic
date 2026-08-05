@@ -73,10 +73,7 @@ public class MatchSizeAction extends SelectionAction {
 	 * @return The command to resize the selected objects.
 	 */
 	private Command createMatchSizeCommand(List<EditPart> editParts) {
-		if (editParts.isEmpty()) {
-			return null;
-		}
-		if (!(editParts.get(0) instanceof GraphicalEditPart)) {
+		if (editParts.isEmpty() || !(editParts.get(0) instanceof GraphicalEditPart)) {
 			return null;
 		}
 

@@ -429,11 +429,7 @@ public class TreeLayoutAlgorithm extends AbstractLayoutAlgorithm {
 		private void modifyWeightRecursively(InternalNode layoutEntity, int i, double weight,
 				Set<InternalNode> descendentsSeenSoFar, InternalNode[] entities, InternalRelationship[] relationships) {
 			// No need to do further computation!
-			if (layoutEntity == null) {
-				return;
-			}
-
-			if (descendentsSeenSoFar.contains(layoutEntity)) {
+			if ((layoutEntity == null) || descendentsSeenSoFar.contains(layoutEntity)) {
 				return; // No need to do further computation.
 			}
 

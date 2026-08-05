@@ -692,13 +692,10 @@ public class GraphNode extends GraphItem {
 	private boolean isFisheyeEnabled;
 
 	protected IFigure fishEye(boolean enable, boolean animate) {
-		if (isDisposed) {
-			// If a fisheyed figure is still left on the canvas, we could get
-			// called once more after the dispose is called. Since we cleaned
-			// up everything on dispose, we can just return null here.
-			return null;
-		}
-		if (!checkStyle(ZestStyles.NODES_FISHEYE)) {
+		// If a fisheyed figure is still left on the canvas, we could get
+		// called once more after the dispose is called. Since we cleaned
+		// up everything on dispose, we can just return null here.
+		if (isDisposed || !checkStyle(ZestStyles.NODES_FISHEYE)) {
 			return null;
 		}
 		if (enable) {

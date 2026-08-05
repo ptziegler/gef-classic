@@ -40,23 +40,11 @@ public class SmallRect {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
 		}
 		SmallRect other = (SmallRect) obj;
-		if (height != other.height) {
-			return false;
-		}
-		if (width != other.width) {
-			return false;
-		}
-		if (x != other.x) {
-			return false;
-		}
-		if (y != other.y) {
+		if ((height != other.height) || (width != other.width) || (x != other.x) || (y != other.y)) {
 			return false;
 		}
 		return true;

@@ -63,10 +63,7 @@ public class GraphJFaceSnippet9 {
 
 		@Override
 		public Object getParent(Object element) {
-			if (element.equals(n2)) {
-				return n1;
-			}
-			if (element.equals(n3)) {
+			if (element.equals(n2) || element.equals(n3)) {
 				return n1;
 			}
 			if (element.equals(n4)) {

@@ -71,10 +71,7 @@ public class CompoundCommand extends Command {
 			return false;
 		}
 		for (Command cmd : commandList) {
-			if (cmd == null) {
-				return false;
-			}
-			if (!cmd.canRedo()) {
+			if ((cmd == null) || !cmd.canRedo()) {
 				return false;
 			}
 		}
@@ -90,10 +87,7 @@ public class CompoundCommand extends Command {
 			return false;
 		}
 		for (Command cmd : commandList) {
-			if (cmd == null) {
-				return false;
-			}
-			if (!cmd.canExecute()) {
+			if ((cmd == null) || !cmd.canExecute()) {
 				return false;
 			}
 		}
@@ -109,10 +103,7 @@ public class CompoundCommand extends Command {
 			return false;
 		}
 		for (Command cmd : commandList) {
-			if (cmd == null) {
-				return false;
-			}
-			if (!cmd.canUndo()) {
+			if ((cmd == null) || !cmd.canUndo()) {
 				return false;
 			}
 		}

@@ -223,10 +223,7 @@ public class ButtonGroup {
 			}
 			selectNewModel(model);
 		} else {
-			if (model != getSelected()) {
-				return;
-			}
-			if (getDefault() == null) {
+			if ((model != getSelected()) || (getDefault() == null)) {
 				return;
 			}
 			getDefault().setSelected(true);
