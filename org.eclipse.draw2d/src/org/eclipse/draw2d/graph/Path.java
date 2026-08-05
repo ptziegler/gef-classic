@@ -191,17 +191,10 @@ public class Path {
 			return;
 		}
 
-		if (o2.containsProper(segment.start) || o1.containsProper(segment.end)) {
+		if (o2.containsProper(segment.start) || o1.containsProper(segment.end) || (checkTopRight1 && segment.intersects(o1.x, o1.bottom() - 1, o1.right() - 1, o1.y))) {
 			return;
 		}
-
-		if (checkTopRight1 && segment.intersects(o1.x, o1.bottom() - 1, o1.right() - 1, o1.y)) {
-			return;
-		}
-		if (checkTopRight2 && segment.intersects(o2.x, o2.bottom() - 1, o2.right() - 1, o2.y)) {
-			return;
-		}
-		if (!checkTopRight1 && segment.intersects(o1.x, o1.y, o1.right() - 1, o1.bottom() - 1)) {
+		if ((checkTopRight2 && segment.intersects(o2.x, o2.bottom() - 1, o2.right() - 1, o2.y)) || (!checkTopRight1 && segment.intersects(o1.x, o1.y, o1.right() - 1, o1.bottom() - 1))) {
 			return;
 		}
 		if (!checkTopRight2 && segment.intersects(o2.x, o2.y, o2.right() - 1, o2.bottom() - 1)) {
@@ -838,12 +831,9 @@ public class Path {
 	 * @return <code>true</code> if a clean path touches the obstacle
 	 */
 	boolean testAndSet(Obstacle obs) {
-		if (isDirty) {
-			return false;
-		}
 		// This will never actually happen because obstacles are not stored by
 		// identity
-		if (excludedObstacles.contains(obs)) {
+		if (isDirty || excludedObstacles.contains(obs)) {
 			return false;
 		}
 

@@ -157,10 +157,7 @@ class Splitter extends Composite {
 		Control[] children = getChildren();
 		Control[] controls = {};
 		for (Control child : children) {
-			if (child instanceof Sash) {
-				continue;
-			}
-			if (onlyVisible && !child.getVisible()) {
+			if ((child instanceof Sash) || (onlyVisible && !child.getVisible())) {
 				continue;
 			}
 

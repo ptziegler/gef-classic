@@ -102,10 +102,7 @@ public class SelectionTool extends TargetingTool {
 	 * {@link EditPart#eraseTargetFeedback(Request)}.
 	 */
 	protected void eraseHoverFeedback() {
-		if (getTargetEditPart() == null) {
-			return;
-		}
-		if (getTargetHoverRequest() == null) {
+		if ((getTargetEditPart() == null) || (getTargetHoverRequest() == null)) {
 			return;
 		}
 		getTargetEditPart().eraseTargetFeedback(getTargetHoverRequest());
@@ -678,10 +675,7 @@ public class SelectionTool extends TargetingTool {
 	 * {@link EditPart#showTargetFeedback(Request)} with a hover request.
 	 */
 	protected void showHoverFeedback() {
-		if (getTargetEditPart() == null) {
-			return;
-		}
-		if (getTargetHoverRequest() == null) {
+		if ((getTargetEditPart() == null) || (getTargetHoverRequest() == null)) {
 			return;
 		}
 		getTargetEditPart().showTargetFeedback(getTargetHoverRequest());

@@ -329,10 +329,7 @@ public class ButtonModel {
 	 * @since 2.0
 	 */
 	public void setArmed(boolean value) {
-		if (isArmed() == value) {
-			return;
-		}
-		if (!isEnabled()) {
+		if ((isArmed() == value) || !isEnabled()) {
 			return;
 		}
 		setFlag(ARMED_FLAG, value);

@@ -139,10 +139,7 @@ public class RectTree {
 		}
 
 		public short getWordId(int x, int y) {
-			if (filled > BACKGROUND) {
-				return filled;
-			}
-			if (children == null) {
+			if ((filled > BACKGROUND) || (children == null)) {
 				return filled;
 			}
 			for (int i = 0; i < childAreas.length; i++) {

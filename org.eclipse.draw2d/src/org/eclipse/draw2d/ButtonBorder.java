@@ -133,13 +133,7 @@ public class ButtonBorder extends SchemeBorder {
 		 */
 		@Override
 		protected boolean calculateOpaque() {
-			if (!super.calculateOpaque()) {
-				return false;
-			}
-			if (getHighlight().length != getShadowPressed().length) {
-				return false;
-			}
-			if (getShadow().length != getHighlightPressed().length) {
+			if (!super.calculateOpaque() || (getHighlight().length != getShadowPressed().length) || (getShadow().length != getHighlightPressed().length)) {
 				return false;
 			}
 			Color[] colors = getHighlightPressed();

@@ -255,10 +255,7 @@ public class TreeLayoutObserver {
 			if (potentialParent == null) {
 				return false;
 			}
-			if (this.parent == null && !this.isAncestorOf(potentialParent)) {
-				return true;
-			}
-			if (potentialParent.depth <= this.depth && potentialParent.depth != -1) {
+			if ((this.parent == null && !this.isAncestorOf(potentialParent)) || (potentialParent.depth <= this.depth && potentialParent.depth != -1)) {
 				return true;
 			}
 			if (this.parent != null && this.parent.depth == -1 && potentialParent.depth >= 0

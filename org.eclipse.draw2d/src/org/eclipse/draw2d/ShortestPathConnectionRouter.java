@@ -89,10 +89,7 @@ public final class ShortestPathConnectionRouter extends AbstractRouter {
 	}
 
 	void addChild(IFigure child) {
-		if (connectionToPaths == null) {
-			return;
-		}
-		if (figuresToBounds.containsKey(child)) {
+		if ((connectionToPaths == null) || figuresToBounds.containsKey(child)) {
 			return;
 		}
 		Rectangle bounds = child.getBounds().getCopy();

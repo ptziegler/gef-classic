@@ -439,10 +439,7 @@ public class Figure implements IFigure {
 	 */
 	@Override
 	public IFigure findFigureAt(int x, int y, TreeSearch search) {
-		if (!containsPoint(x, y)) {
-			return null;
-		}
-		if (search.prune(this)) {
+		if (!containsPoint(x, y) || search.prune(this)) {
 			return null;
 		}
 		IFigure child = findDescendantAtExcluding(x, y, search);

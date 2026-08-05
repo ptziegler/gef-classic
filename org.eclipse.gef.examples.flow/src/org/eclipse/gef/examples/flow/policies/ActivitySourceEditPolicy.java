@@ -64,13 +64,7 @@ public class ActivitySourceEditPolicy extends ContainerEditPolicy {
 	 */
 	@Override
 	public EditPart getTargetEditPart(Request request) {
-		if (REQ_CREATE.equals(request.getType())) {
-			return getHost();
-		}
-		if (REQ_ADD.equals(request.getType())) {
-			return getHost();
-		}
-		if (REQ_MOVE.equals(request.getType())) {
+		if (REQ_CREATE.equals(request.getType()) || REQ_ADD.equals(request.getType()) || REQ_MOVE.equals(request.getType())) {
 			return getHost();
 		}
 		return super.getTargetEditPart(request);

@@ -568,11 +568,8 @@ public class TextFlow extends InlineFlow {
 			// frag.getLineRoot().getVisibleTop());
 			// g.drawLine(frag.getX(), frag.getBaseline(), frag.getWidth() +
 			// frag.getX(), frag.getBaseline());
-			if (frag.offset == -1) {
-				continue;
-			}
 			// Loop until first visible fragment
-			if (yStart > frag.getLineRoot().getVisibleBottom() + 1) { // The + 1 is
+			if ((frag.offset == -1) || (yStart > frag.getLineRoot().getVisibleBottom() + 1)) { // The + 1 is
 				// for
 				// disabled
 				// text
