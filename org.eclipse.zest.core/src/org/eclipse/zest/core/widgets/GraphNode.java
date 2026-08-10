@@ -31,7 +31,6 @@ import org.eclipse.zest.layouts.LayoutEntity;
 import org.eclipse.zest.layouts.constraints.LayoutConstraint;
 
 import org.eclipse.draw2d.Animation;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -184,24 +183,18 @@ public class GraphNode extends GraphItem {
 
 	static int count = 0;
 
-	@SuppressWarnings("removal")
 	protected void initModel(IContainer parent, String text, Image image) {
 		this.nodeStyle |= parent.getGraph().getNodeStyle();
 		this.parent = parent;
 		this.sourceConnections = new ArrayList<>();
 		this.targetConnections = new ArrayList<>();
-		this.foreColor = parent.getGraph().DARK_BLUE;
-		this.foreHighlightColor = null;
-		this.backColor = parent.getGraph().LIGHT_BLUE;
-		this.backHighlightColor = parent.getGraph().HIGHLIGHT_COLOR;
 		this.nodeStyle = SWT.NONE;
-		this.borderColor = ColorConstants.lightGray;
-		this.borderHighlightColor = ColorConstants.blue;
 		this.borderWidth = 1;
 		this.currentLocation = new PrecisionPoint(0, 0);
 		this.size = new Dimension(-1, -1);
 		this.font = Display.getDefault().getSystemFont();
 		this.graph = parent.getGraph();
+		this.graph.getGraphDecorator().decorateNode(this);
 		this.cacheLabel = false;
 		this.setText(text);
 		this.layoutEntity = new LayoutGraphNode();

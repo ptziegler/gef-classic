@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.zest.core.widgets.decorators;
 
+import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
@@ -29,6 +30,11 @@ public class GraphDecorator implements IGraphDecorator {
 
 	@Override
 	public void decorateNode(GraphNode node) {
+		// Default implementation does nothing
+	}
+
+	@Override
+	public void decorateGraph(Graph graph) {
 		// Default implementation does nothing
 	}
 }
