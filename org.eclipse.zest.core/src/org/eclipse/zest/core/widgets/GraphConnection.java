@@ -30,7 +30,6 @@ import org.eclipse.zest.layouts.interfaces.ConnectionLayout;
 import org.eclipse.zest.layouts.interfaces.NodeLayout;
 
 import org.eclipse.draw2d.ChopboxAnchor;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.Graphics;
@@ -97,7 +96,6 @@ public class GraphConnection extends GraphItem {
 
 	private ConnectionRouter router = null;
 
-	@SuppressWarnings("removal")
 	public GraphConnection(Graph graphModel, int style, GraphNode source, GraphNode destination) {
 		super(graphModel, style);
 
@@ -106,13 +104,11 @@ public class GraphConnection extends GraphItem {
 		this.sourceNode = source;
 		this.destinationNode = destination;
 		this.visible = true;
-		this.color = ColorConstants.lightGray;
-		this.foreground = ColorConstants.lightGray;
-		this.highlightColor = graphModel.DARK_BLUE;
 		this.lineWidth = 1;
 		this.lineStyle = Graphics.LINE_SOLID;
 		setWeight(weight);
 		this.graphModel = graphModel;
+		this.graphModel.getGraph().getGraphDecorator().decorateConnection(this);
 		this.curveDepth = 0;
 		this.layoutConnection = new GraphLayoutConnection();
 		this.font = Display.getDefault().getSystemFont();

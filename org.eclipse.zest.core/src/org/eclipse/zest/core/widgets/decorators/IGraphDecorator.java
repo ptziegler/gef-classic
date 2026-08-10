@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.zest.core.widgets.decorators;
 
+import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
@@ -37,4 +38,9 @@ public interface IGraphDecorator {
 	 * Decorate a node.
 	 */
 	void decorateNode(GraphNode node);
+
+	/**
+	 * Decorate a graph.
+	 */
+	void decorateGraph(Graph graph);
 }

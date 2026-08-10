@@ -19,6 +19,7 @@ import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.core.widgets.ZestStyles;
@@ -102,5 +103,10 @@ public class GraphLabelDecorator extends LabelProvider implements IGraphLabelDec
 			Optional.ofNullable(decorator.getBorderWidth(entity)).filter(width -> width >= 0).ifPresent(node::setBorderWidth);
 			Optional.ofNullable(decorator.getTooltip(entity)).ifPresent(node::setTooltip);
 		}
+	}
+
+	@Override
+	public void decorateGraph(Graph graph) {
+		// Default implementation does nothing
 	}
 }

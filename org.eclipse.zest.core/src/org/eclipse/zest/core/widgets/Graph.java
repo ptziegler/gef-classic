@@ -40,8 +40,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
 import org.eclipse.zest.core.viewers.internal.ZoomManager;
+import org.eclipse.zest.core.widgets.decorators.IGraphDecorator;
 import org.eclipse.zest.core.widgets.gestures.RotateGestureListener;
 import org.eclipse.zest.core.widgets.gestures.ZoomGestureListener;
+import org.eclipse.zest.core.widgets.internal.BasicGraphDecorator;
 import org.eclipse.zest.core.widgets.internal.ContainerFigure;
 import org.eclipse.zest.core.widgets.internal.ZestRootLayer;
 import org.eclipse.zest.layouts.InvalidLayoutConfiguration;
@@ -107,43 +109,80 @@ public class Graph extends FigureCanvas implements IContainer2 {
 	// @tag CGraph.Colors : These are the colour constants for the graph, they
 	// are disposed on clean-up
 	/**
-	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@code new Color(216, 228, 248)}.
+	 *
+	 * @deprecated Use {@link ColorConstants#lightBlue} instead. This field will be
+	 *             removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color LIGHT_BLUE = null;
 	/**
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@code new Color(213, 243, 255)}.
+	 *
 	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color LIGHT_BLUE_CYAN = null;
 	/**
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@code new Color(139, 150, 171)}.
+	 *
 	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color GREY_BLUE = null;
 	/**
-	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@code new Color(1, 70, 122)}.
+	 *
+	 * @deprecated Use {@link ColorConstants#darkBlue} instead. This field will be
+	 *             removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color DARK_BLUE = null;
 	/**
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@code new Color(255, 255, 206)}.
+	 *
 	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color LIGHT_YELLOW = null;
 
 	/**
-	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@link ColorConstants#yellow}.
+	 *
+	 * @deprecated Use {@link ColorConstants#yellow} instead. This field will be
+	 *             removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color HIGHLIGHT_COLOR = ColorConstants.yellow;
 	/**
-	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@link ColorConstants#orange}.
+	 *
+	 * @deprecated Use {@link ColorConstants#orange} instead. This field will be
+	 *             removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color HIGHLIGHT_ADJACENT_COLOR = ColorConstants.orange;
 	/**
-	 * @deprecated Do not use. This field will be removed after the 2028-09 release.
+	 * Colors don't consume system resources anymore and should be maintained by the
+	 * client. Use {@link #setGraphDecorator(IGraphDecorator)} if styling is
+	 * required. This field is initialized with {@code new Color(216, 228, 248)}.
+	 *
+	 * @deprecated Use {@link ColorConstants#lightBlue} instead. This field will be
+	 *             removed after the 2028-09 release.
 	 */
 	@Deprecated(since = "2026-09", forRemoval = true)
 	public Color DEFAULT_NODE_COLOR = LIGHT_BLUE;
@@ -160,6 +199,7 @@ public class Graph extends FigureCanvas implements IContainer2 {
 	IFigure fisheyedFigure = null;
 	private final List<FisheyeListener> fisheyeListeners = new CopyOnWriteArrayList<>();
 	private List<SelectionListener> selectionListeners = null;
+	private IGraphDecorator graphDecorator = BasicGraphDecorator.getInstance();
 
 	/** This maps all visible nodes to their model element. */
 	private HashMap<IFigure, GraphItem> figure2ItemMap = null;
@@ -216,7 +256,7 @@ public class Graph extends FigureCanvas implements IContainer2 {
 	 */
 	public Graph(Composite parent, int style, boolean enableHideNodes) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
-		this.setBackground(ColorConstants.white);
+		this.getGraphDecorator().decorateGraph(this);
 
 		LIGHT_BLUE = new Color(216, 228, 248);
 		LIGHT_BLUE_CYAN = new Color(213, 243, 255);
@@ -1808,5 +1848,25 @@ public class Graph extends FigureCanvas implements IContainer2 {
 			zoomManager = new ZoomManager(getRootLayer(), getViewport());
 		}
 		return zoomManager;
+	}
+
+	/**
+	 * Sets the decorator used for styling all nodes and connections that are part
+	 * of this graph. If {@code null} is passed as argument, the graph reverts back
+	 * to its "default" decorator.
+	 *
+	 * @param graphDecorator The new decorator instance. May be {@code null}.
+	 * @since 1.19
+	 */
+	public void setGraphDecorator(IGraphDecorator graphDecorator) {
+		if (graphDecorator == null) {
+			this.graphDecorator = BasicGraphDecorator.getInstance();
+			return;
+		}
+		this.graphDecorator = graphDecorator;
+	}
+
+	/* package */ IGraphDecorator getGraphDecorator() {
+		return graphDecorator;
 	}
 }
