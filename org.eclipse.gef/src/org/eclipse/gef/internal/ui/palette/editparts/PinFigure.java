@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2024 IBM Corporation and others.
+ * Copyright (c) 2008, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -37,7 +37,7 @@ public class PinFigure extends Toggle {
 	private final PaletteColorProvider colorProvider;
 
 	public PinFigure(PaletteColorProvider colorProvider) {
-		super(new ImageFigure(InternalImages.get(InternalImages.IMG_UNPINNED)));
+		super(new ImageFigure(InternalImages.getImage(InternalImages.DESC_UNPINNED)));
 		this.colorProvider = colorProvider;
 		setRolloverEnabled(true);
 		setRequestFocusEnabled(false);
@@ -49,10 +49,10 @@ public class PinFigure extends Toggle {
 		addChangeListener(e -> {
 			if (e.getPropertyName().equals(ButtonModel.SELECTED_PROPERTY)) {
 				if (isSelected()) {
-					getImageFigure().setImage(InternalImages.get(InternalImages.IMG_PINNED));
+					getImageFigure().setImage(InternalImages.getImage(InternalImages.DESC_PINNED));
 					getToolTip().setText(PaletteMessages.TOOLTIP_UNPIN_FIGURE);
 				} else {
-					((ImageFigure) (getChildren().get(0))).setImage(InternalImages.get(InternalImages.IMG_UNPINNED));
+					((ImageFigure) (getChildren().get(0))).setImage(InternalImages.getImage(InternalImages.DESC_UNPINNED));
 					getToolTip().setText(PaletteMessages.TOOLTIP_PIN_FIGURE);
 				}
 			}

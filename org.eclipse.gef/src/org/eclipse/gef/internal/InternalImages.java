@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2025 IBM Corporation and others.
+ * Copyright (c) 2000, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,12 +12,12 @@
  *******************************************************************************/
 package org.eclipse.gef.internal;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 
 import org.eclipse.draw2d.internal.ImageUtils;
 
@@ -115,22 +115,7 @@ public class InternalImages {
 
 	public static final ImageDescriptor DESC_PALETTE;
 
-	/**
-	 * Can be used to access the cached pinned image by using {@link #get(String)}.
-	 */
-	public static final String IMG_PINNED = "icons/pinned.svg";//$NON-NLS-1$
-
-	/**
-	 * Can be used to access the cached pinned image by using {@link #get(String)}.
-	 */
-	public static final String IMG_UNPINNED = "icons/unpinned.svg";//$NON-NLS-1$
-
-	/**
-	 * Can be used to access the cached pinned image by using {@link #get(String)}.
-	 */
-	public static final String IMG_PALETTE = "icons/palette_view.svg";//$NON-NLS-1$
-
-	private static final Map<String, Image> overloadedImages = new HashMap<>();
+	private static ResourceManager resourceManager;
 
 	static {
 		DESC_BOLD = createDescriptor("icons/style_bold.svg"); //$NON-NLS-1$
@@ -173,10 +158,10 @@ public class InternalImages {
 		DESC_FOLDER_OPEN = createDescriptor("icons/folder_open.svg"); //$NON-NLS-1$
 		DESC_FOLDER_CLOSED = createDescriptor("icons/folder_closed.svg"); //$NON-NLS-1$
 
-		DESC_PINNED = createAndCache(IMG_PINNED);
-		DESC_UNPINNED = createAndCache(IMG_UNPINNED);
+		DESC_PINNED = createDescriptor("icons/pinned.svg"); //$NON-NLS-1$
+		DESC_UNPINNED = createDescriptor("icons/unpinned.svg"); //$NON-NLS-1$
 
-		DESC_PALETTE = createAndCache(IMG_PALETTE);
+		DESC_PALETTE = createDescriptor("icons/palette_view.svg"); //$NON-NLS-1$
 
 	}
 
@@ -190,39 +175,36 @@ public class InternalImages {
 	}
 
 	/**
-	 * Creates the image descriptor from the filename given and caches it in the
-	 * plugin's image registry.
+	 * Creates and returns a shared image for the given descriptor. This image is
+	 * disposed automatically when this bundle is stopped and must not be disposed
+	 * by the caller.
 	 *
-	 * @param imageName the full filename of the image
-	 * @return the new image descriptor
+	 * @param descriptor The image descriptor to create an image from.
+	 * @return the created image.
 	 */
-	private static ImageDescriptor createAndCache(String imageName) {
-		ImageDescriptor result = createDescriptor(imageName);
-		InternalGEFPlugin.getDefault().getImageRegistry().put(imageName, result);
-		return result;
+	public static Image getImage(ImageDescriptor descriptor) {
+		return getResourceManager().create(descriptor);
 	}
 
 	/**
-	 * Gets an image from the image registry. This image should not be disposed of,
-	 * that is handled in the image registry. The image descriptor must have
-	 * previously been cached in the image registry. The cached images for the
-	 * public image names defined in this file can be retrieved using this method.
-	 *
-	 * @param imageName the full filename of the image
-	 * @return the image or null if it has not been cached in the registry
+	 * Disposes the underlying resource manager and all of its allocated images.
+	 * This method must be called before this bundle is stopped.
 	 */
-	public static Image get(String imageName) {
-		Image image = overloadedImages.get(imageName);
-		if (image != null) {
-			return image;
-		}
-		return InternalGEFPlugin.getDefault().getImageRegistry().get(imageName);
-	}
-
-	public static void set(String imageName, Image image) {
-		synchronized (overloadedImages) {
-			overloadedImages.put(imageName, image);
+	public static void dispose() {
+		if (resourceManager != null) {
+			resourceManager.dispose();
+			resourceManager = null;
 		}
 	}
 
+	/**
+	 * Lazily creates and returns the resource manager used to allocate the shared
+	 * images.
+	 */
+	private static ResourceManager getResourceManager() {
+		if (resourceManager == null) {
+			resourceManager = new LocalResourceManager(JFaceResources.getResources());
+		}
+		return resourceManager;
+	}
 }
