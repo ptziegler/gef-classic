@@ -75,6 +75,7 @@ public class InternalGEFPlugin extends AbstractUIPlugin {
 		for (ServiceReference<IToolTipHelperFactory> toolTipProviderRef : toolTipProviderRefs) {
 			bc.ungetService(toolTipProviderRef);
 		}
+		InternalImages.dispose();
 		super.stop(bc);
 	}
 

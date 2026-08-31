@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2025 IBM Corporation and others.
+ * Copyright (c) 2004, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -1126,7 +1126,7 @@ public class FlyoutPaletteComposite extends Composite {
 		private TextUtilities textUtilities;
 
 		public TitleLabel(boolean isHorizontal) {
-			super(GEFMessages.Palette_Label, InternalImages.get(InternalImages.IMG_PALETTE));
+			super(GEFMessages.Palette_Label, InternalImages.getImage(InternalImages.DESC_PALETTE));
 			setLabelAlignment(PositionConstants.LEFT);
 			setBorder(BORDER);
 			Label tooltip = new Label(getText());
