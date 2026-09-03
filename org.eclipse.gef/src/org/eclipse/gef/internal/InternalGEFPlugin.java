@@ -14,11 +14,13 @@
 package org.eclipse.gef.internal;
 
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import org.eclipse.swt.SWT;
@@ -27,9 +29,14 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageDataProvider;
 
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import org.eclipse.draw2d.ToolTipHelper;
 
@@ -38,20 +45,28 @@ import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.ui.parts.DomainEventDispatcher;
 import org.eclipse.gef.util.IToolTipHelperFactory;
 
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.Version;
 
-public class InternalGEFPlugin extends AbstractUIPlugin {
+public class InternalGEFPlugin implements BundleActivator {
 	/** Monitor scale property */
 	public static final String MONITOR_SCALE_PROPERTY = "monitorScale"; //$NON-NLS-1$
 
 	private static BundleContext context;
-	private static AbstractUIPlugin singleton;
+	private static InternalGEFPlugin singleton;
 	private static Boolean requiresDisabledIcons;
 	private static Collection<ServiceReference<IToolTipHelperFactory>> toolTipProviderRefs;
 	private static Collection<IToolTipHelperFactory> toolTipProviders;
+	private final ReentrantLock lock = new ReentrantLock();
+	private IPersistentPreferenceStore preferenceStore;
+
+	private static Constructor<?> UI_SCOPED_PREFERENCE_STORE_CONSTRUCTOR = getConstructor(
+			"org.eclipse.ui.preferences.ScopedPreferenceStore", IScopeContext.class, String.class); //$NON-NLS-1$
+	private static Constructor<?> JFACE_SCOPED_PREFERENCE_STORE_CONSTRUCTOR = getConstructor(
+			"org.eclipse.jface.preference.ScopedPreferenceStore", IScopeContext.class, String.class); //$NON-NLS-1$
 
 	public InternalGEFPlugin() {
 		singleton = this;
@@ -59,7 +74,6 @@ public class InternalGEFPlugin extends AbstractUIPlugin {
 
 	@Override
 	public void start(BundleContext bc) throws Exception {
-		super.start(bc);
 		context = bc;
 		toolTipProviders = new ArrayList<>();
 		toolTipProviderRefs = bc.getServiceReferences(IToolTipHelperFactory.class, null);
@@ -75,20 +89,22 @@ public class InternalGEFPlugin extends AbstractUIPlugin {
 		for (ServiceReference<IToolTipHelperFactory> toolTipProviderRef : toolTipProviderRefs) {
 			bc.ungetService(toolTipProviderRef);
 		}
+		if (preferenceStore != null) {
+			try {
+				preferenceStore.save();
+				preferenceStore = null;
+			} catch (IOException e) {
+				getLog().log(Status.error(e.getMessage(), e));
+			}
+		}
 		InternalImages.dispose();
-		super.stop(bc);
-	}
-
-	@Override
-	protected void initializeImageRegistry(ImageRegistry reg) {
-		super.initializeImageRegistry(reg);
 	}
 
 	public static BundleContext getContext() {
 		return context;
 	}
 
-	public static AbstractUIPlugin getDefault() {
+	public static InternalGEFPlugin getDefault() {
 		return singleton;
 	}
 
@@ -166,4 +182,78 @@ public class InternalGEFPlugin extends AbstractUIPlugin {
 		}
 		return requiresDisabledIcons;
 	}
+
+	/**
+	 * Returns the class for the given class name, or null if the class cannot be
+	 * found.
+	 *
+	 * @param className the fully qualified name of the class to load
+	 * @return the class for the given class name, or null if the class cannot be
+	 *         found
+	 */
+	private static Class<?> getClass(String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the constructor for the given class name and parameter types, or null
+	 * if the class or constructor cannot be found.
+	 *
+	 * @param name           the fully qualified name of the class to load
+	 * @param parameterTypes the parameter types of the constructor to find
+	 * @return the constructor for the given class name and parameter types, or null
+	 *         if the class or constructor cannot be found
+	 */
+	private static Constructor<?> getConstructor(String name, Class<?>... parameterTypes) {
+		Class<?> clazz = getClass(name);
+		if (clazz == null) {
+			return null;
+		}
+		try {
+			return clazz.getConstructor(parameterTypes);
+		} catch (NoSuchMethodException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns the preference store for this UI plug-in. This preference store is
+	 * used to hold persistent settings for this plug-in in the context of a
+	 * workbench. Some of these settings will be user controlled, whereas others may
+	 * be internal setting that are never exposed to the user.
+	 * <p>
+	 * <strong>NOTE:</strong> This method may be called from a none UI-Thread.
+	 * </p>
+	 *
+	 * @return the preference store
+	 */
+	public IPreferenceStore getPreferenceStore() {
+		lock.lock();
+		try {
+			if (preferenceStore == null) {
+				// ScopedPreferenceStore was moved to org.eclipse.jface in Eclipse 2026-12
+				if (JFACE_SCOPED_PREFERENCE_STORE_CONSTRUCTOR != null) {
+					preferenceStore = (IPersistentPreferenceStore) JFACE_SCOPED_PREFERENCE_STORE_CONSTRUCTOR
+							.newInstance(InstanceScope.INSTANCE, context.getBundle().getSymbolicName());
+				} else {
+					preferenceStore = (IPersistentPreferenceStore) UI_SCOPED_PREFERENCE_STORE_CONSTRUCTOR
+							.newInstance(InstanceScope.INSTANCE, context.getBundle().getSymbolicName());
+				}
+			}
+		} catch (ReflectiveOperationException e) {
+			getLog().log(Status.error(e.getMessage(), e));
+		} finally {
+			lock.unlock();
+		}
+		return preferenceStore;
+	}
+
+	private static ILog getLog() {
+		return Platform.getLog(context.getBundle());
+	}
+
 }
