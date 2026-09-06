@@ -47,7 +47,7 @@ public class DirectEditManagerTest {
 
 	@BeforeEach
 	public void setUp() {
-		shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 		editDomain = new EditDomain();
 		throwables = new ArrayList<>();
 		editManager = null;
