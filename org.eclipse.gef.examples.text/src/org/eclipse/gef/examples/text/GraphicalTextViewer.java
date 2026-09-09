@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2023 IBM Corporation and others.
+ * Copyright (c) 2004, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -51,7 +51,7 @@ public class GraphicalTextViewer extends ScrollingGraphicalViewer {
 	@Deprecated
 	public SelectionRange getSelectionRange() {
 		if (selectionModel != null) {
-			return selectionModel.getSelectionRange();
+			return selectionModel.selectionRange();
 		}
 		return null;
 	}
@@ -104,7 +104,7 @@ public class GraphicalTextViewer extends ScrollingGraphicalViewer {
 		SelectionModel newModel = null;
 		if (newRange != null) {
 			newModel = createSelectionModel(null, newRange,
-					selectionModel == null ? null : selectionModel.getSelectedEditParts(), null);
+					selectionModel == null ? null : selectionModel.selectedEditParts());
 		}
 		setSelectionModel(newModel);
 	}
@@ -158,7 +158,7 @@ public class GraphicalTextViewer extends ScrollingGraphicalViewer {
 		}
 		ArrayList<EditPart> list = new ArrayList<>();
 		list.add(editpart);
-		setSelectionModel(createSelectionModel(null, null, list, null));
+		setSelectionModel(createSelectionModel(null, null, list));
 	}
 
 	// @TODO:Pratik Hack. This shouldn't be here. CommandStack should be doing
@@ -187,7 +187,7 @@ public class GraphicalTextViewer extends ScrollingGraphicalViewer {
 	@Override
 	public void setSelection(ISelection newSelection) {
 		if (newSelection != null) {
-			setSelectionModel(createSelectionModel(newSelection, null, null, null));
+			setSelectionModel(createSelectionModel(newSelection, null, null));
 		} else {
 			setSelectionModel(null);
 		}
@@ -196,17 +196,17 @@ public class GraphicalTextViewer extends ScrollingGraphicalViewer {
 	@Override
 	public ISelection getSelection() {
 		if (selectionModel != null) {
-			return selectionModel.getSelection();
+			return new StructuredSelection(selectionModel.selectedEditParts());
 		}
 		return new StructuredSelection(getContents());
 	}
 
-	private static SelectionModel createSelectionModel(ISelection selection, SelectionRange range, List<EditPart> parts,
-			EditPart container) {
-		if (selection instanceof IStructuredSelection) {
-			return new SelectionModel(selection);
+	private static SelectionModel createSelectionModel(ISelection selection, SelectionRange range,
+			List<EditPart> parts) {
+		if (selection instanceof IStructuredSelection structuredSelection) {
+			return new SelectionModel(structuredSelection);
 		}
-		return new SelectionModel(range, parts, container);
+		return new SelectionModel(range, parts);
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class GraphicalTextViewer extends ScrollingGraphicalViewer {
 	@Override
 	protected List<EditPart> primGetSelectedEditParts() {
 		if (selectionModel != null) {
-			return selectionModel.getSelectedEditParts();
+			return selectionModel.selectedEditParts();
 		}
 		return Collections.emptyList();
 	}
