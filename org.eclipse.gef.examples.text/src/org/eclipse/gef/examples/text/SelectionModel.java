@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -19,9 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 
 import org.eclipse.gef.EditPart;
 
@@ -33,27 +31,26 @@ import org.eclipse.gef.examples.text.edit.TextEditPart;
  * @author Pratik Shah
  * @since 3.2
  */
-public class SelectionModel {
-
-	private final SelectionRange selectionRange;
-	private final EditPart selectionContainer;
-	private final List<EditPart> constantSelection;
+public record SelectionModel(SelectionRange selectionRange, List<EditPart> selectedEditParts) {
 
 	@SuppressWarnings("unchecked")
-	public SelectionModel(ISelection selection) {
-		this(null, selection instanceof IStructuredSelection structSel ? structSel.toList() : null, null);
+	public SelectionModel(IStructuredSelection selection) {
+		this(null, selection.toList());
 	}
 
-	public SelectionModel(SelectionRange range, List<EditPart> selectedParts, EditPart container) {
-		selectionRange = range;
-		selectionContainer = container;
-		constantSelection = selectedParts == null ? Collections.emptyList()
-				: Collections.unmodifiableList(selectedParts);
+	public SelectionModel(SelectionRange selectionRange, List<EditPart> selectedEditParts) {
+		this.selectionRange = selectionRange;
+		this.selectedEditParts = nullSafeCollection(selectedEditParts);
+	}
+
+	private static List<EditPart> nullSafeCollection(List<EditPart> list) {
+		return list == null ? Collections.emptyList() : List.copyOf(list);
+
 	}
 
 	protected void applySelectedParts() {
-		if (!constantSelection.isEmpty()) {
-			Iterator<EditPart> itr = constantSelection.iterator();
+		if (!selectedEditParts.isEmpty()) {
+			Iterator<EditPart> itr = selectedEditParts.iterator();
 			while (true) {
 				EditPart part = itr.next();
 				if (!itr.hasNext()) {
@@ -66,7 +63,7 @@ public class SelectionModel {
 	}
 
 	protected void applySelectionRange() {
-		SelectionRange range = getSelectionRange();
+		SelectionRange range = selectionRange();
 		if (range != null) {
 			List<EditPart> currentSelection = range.getSelectedParts();
 			for (EditPart element : currentSelection) {
@@ -89,64 +86,34 @@ public class SelectionModel {
 	}
 
 	protected void deselectSelectedParts() {
-		constantSelection.forEach(ep -> ep.setSelected(EditPart.SELECTED_NONE));
+		selectedEditParts.forEach(ep -> ep.setSelected(EditPart.SELECTED_NONE));
 	}
 
 	protected void deselectSelectionRange() {
-		SelectionRange range = getSelectionRange();
+		SelectionRange range = selectionRange();
 		if (range != null) {
 			range.getSelectedParts().forEach(ep -> ((TextEditPart) ep).setSelection(-1, -1));
 		}
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		boolean result = obj == this;
-		if (!result && obj instanceof SelectionModel other) {
-			EditPart otherContainer = other.getSelectionContainer();
-			SelectionRange otherRange = other.getSelectionRange();
-			result = constantSelection.equals(other.getSelectedEditParts())
-					&& (selectionContainer == otherContainer
-							|| (selectionContainer != null && selectionContainer.equals(otherContainer)))
-					&& (selectionRange == otherRange || (selectionRange != null && selectionRange.equals(otherRange)));
-		}
-		return result;
-	}
-
 	public SelectionModel getAppendedSelection(EditPart newPart) {
-		ArrayList<EditPart> list = new ArrayList<>(constantSelection);
+		ArrayList<EditPart> list = new ArrayList<>(selectedEditParts);
 		list.remove(newPart);
 		list.add(newPart);
-		return new SelectionModel(selectionRange, list, selectionContainer);
+		return new SelectionModel(selectionRange, list);
 	}
 
 	public SelectionModel getExcludedSelection(EditPart exclude) {
-		ArrayList<EditPart> list = new ArrayList<>(constantSelection);
+		ArrayList<EditPart> list = new ArrayList<>(selectedEditParts);
 		list.remove(exclude);
-		return new SelectionModel(selectionRange, list, selectionContainer);
+		return new SelectionModel(selectionRange, list);
 	}
 
 	public EditPart getFocusPart() {
-		if (constantSelection.isEmpty()) {
+		if (selectedEditParts.isEmpty()) {
 			return null;
 		}
-		return constantSelection.get(constantSelection.size() - 1);
-	}
-
-	public List<EditPart> getSelectedEditParts() {
-		return constantSelection;
-	}
-
-	public ISelection getSelection() {
-		return new StructuredSelection(constantSelection);
-	}
-
-	public EditPart getSelectionContainer() {
-		return selectionContainer;
-	}
-
-	public SelectionRange getSelectionRange() {
-		return selectionRange;
+		return selectedEditParts.get(selectedEditParts.size() - 1);
 	}
 
 	public void applySelection(SelectionModel old) {
@@ -157,9 +124,9 @@ public class SelectionModel {
 		}
 
 		// Convert to HashSet to optimize performance.
-		if (!old.getSelectedEditParts().isEmpty()) {
-			Collection<EditPart> editparts = new HashSet<>(constantSelection);
-			old.getSelectedEditParts().stream().filter(part -> !editparts.contains(part))
+		if (!old.selectedEditParts().isEmpty()) {
+			Collection<EditPart> editparts = new HashSet<>(selectedEditParts);
+			old.selectedEditParts().stream().filter(part -> !editparts.contains(part))
 					.forEach(part -> part.setSelected(EditPart.SELECTED_NONE));
 		}
 		applySelectedParts();
