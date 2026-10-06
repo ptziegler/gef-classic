@@ -1,0 +1,185 @@
+ifdef::env-github[]
+:imagesdir: ../guide/
+endif::[]
+
+The Cloudio component provides a dedicated <<tag_cloud_view>> to render word
+clouds. The contents of the view can be initialized from an arbitrary text file,
+the visualization can be flexibly customized through several visualization
+parameters. The rendered tag cloud can be exported as an image. 
+
+[#tag_cloud_view]
+= Tag Cloud View
+
+The Tag Cloud view is located under the 'Visualization' category.
+
+image:images/cloudio/GEF-Cloudio-TagCloud.png[]
+
+= Menu Contributions
+
+When it is open and active, it adds certain menu contributions that can be used
+to populate its contents or export an image. The words, which are used to render
+the word cloud can be loaded from a text file via 'File → Load Words from File'.
+In case the file contains words that should be excluded from the word cloud, a
+list of stop words (blacklist) can be loaded in addition via 'File → Load
+Stopwords from File'. After having loaded words and/or stop words, the tag cloud
+is automatically rendered. The rendered tag cloud can be exported to an PNG file
+via 'File → Export Tag Cloud to Image'.
+
+= Control Panel
+
+The <<tag_cloud_view>> provides a control panel at its right border. It can be
+used to adjust the visualization parameters, and to re-render the tag cloud
+based on these parameters: 
+
+**Re-Position:** allows the user to re-position the words on the tag cloud. The
+                 displayed elements will only be re-positioned, keeping fonts,
+                 colors and angles untouched.
+
+**Re-Layout:** allows the user to re-layout the words on tag cloud. The
+               displayed elements will be completely updated using all the
+               current values of the control panel (inclusive the font, color
+               and angle settings). 
+
+Currently, the following parameters are supported:
+
+**Number of Words:** allows the user to set the maximum number of elements which
+                     will be displayed on the tag cloud. The predefined values
+                     are 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000,
+                     1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
+                     2000. The screenshot below represents the
+                     <<tag_cloud_view>> limited to the first 100 most frequently
+                     occurring words: 
+
+image:images/cloudio/GEF_TagCloud_3_improved_clipping.png[]
+
+**Fonts:** allows the user to define new fonts (or switch between the predefined
+           ones) which are used for the rendering font of the tag cloud.
+
+**Max Font Size:** allows the user to set the maximum font size used by the tag
+                   cloud rendering. Note that the words which are too large to
+                   fit into the cloud region will be ignored. By default, this
+                   value is 100.
+
+**Min Font Size:** allows the user to set the minimum font size. By default,
+                   this value is 12.
+
+The screenshot below represents the <<tag_cloud_view>> with different font
+settings: 
+
+image:images/cloudio/GEF_TagCloud_4.png[]
+
+**Boost:** allows the user to enable element boosting (extra enlarging). When
+           the boost is set to 0 (by default), no elements are enlarged. When
+           the boost is set to 10, the first 10 most frequently appearing
+           elements are enlarged.
+
+**Boost Factor:** allows the user to specify the boost factor used by the
+                  boosting (extra enlarging). When the boost factor is set to 1
+                  (by default), the elements are enlarged by factor 1 (no extra
+                  enlarging). When the boost is set to 5, the "to be boosted"
+                  elements will appear 5 times larger than the other elements.
+
+The screenshot below represents the <<tag_cloud_view>> where the first 10 most
+frequently occurring words are extra enlarged by a factor of 5: 
+
+image:images/cloudio/GEF_TagCloud_5.png[]
+
+**Angles:** allows the user to set the words orientation used by the rendering
+of the tag cloud. The predefined values are: "Horizontal only" (the words are
+aligned parallel to the x-axis), "Vertical only" (the words are aligned parallel
+to the y-axis), "Horizontal & Vertical" (the words are aligned either parallel
+to the x-axis or parallel to the y-axis), "45 Degrees" (the words can be aligned
+diagonally) "45 Degrees , mostly horizontal" and "Random". The following
+screenshots represent tag clouds with different angle settings: 
+
+[cols="1,1,1,1,1,1", frame="none", grid="none"]
+|===
+| image:images/cloudio/GEF_TagCloud_6_angles_horizontal_only.png[]
+| image:images/cloudio/GEF_TagCloud_7_angles_vertical_only.png[]
+| image:images/cloudio/GEF_TagCloud_8_angles_horizontal_and_vertical.png[]
+| image:images/cloudio/GEF_TagCloud_9_angles_45_degrees_mostly_horizontal.png[]
+| image:images/cloudio/GEF_TagCloud_10_angles_45_degrees.png[]
+| image:images/cloudio/GEF_TagCloud_11_angles_random.png[]
+|===
+
+**Scale:** allows the user to set the scaling factor that are used to visualize
+           the differences (to determine the "drawing weight" of each words) on
+           the tag cloud. The predefined values are "linear" (the differences
+           are spreaded evenly among the word weights) and "logarithmic" (the
+           differences are spreaded logaritmically among the word weights). The
+           following two screenshots represent the differences between the
+           logaritmic and the linear scale settings, respectively. 
+
+[cols="1,1", frame="none", grid="none"]
+|===
+| image:images/cloudio/GEF_TagCloud_12_scale_logaritmic.png[]
+| image:images/cloudio/GEF_TagCloud_13_scale_linear.png[]
+|===
+
+**X Axis Variation:** allows the user to set the percentage of the x axis
+                      variation. By default, searching for free space is started
+                      in the center of the available area. By increasing this
+                      value the start point will be moved on the x axis.
+
+**Y Axis Variation:** allows the user to set the percentage of the y axis
+                      variation. By default, searching for free space is started
+                      in the center of the available area. By increasing this
+                      value, the start point will be moved on the y axis.
+
+**Colors:** allows the user to define new color schemes (or switch between the
+            predefined ones) which are used as the foregound/background
+            rendering colors of the tag cloud. The screenshots below represent
+            tag clouds rendered with different color schemes:
+
+[cols="1,1", frame="none", grid="none"]
+|===
+| image:images/cloudio/GEF_TagCloud_1.png[]
+| image:images/cloudio/GEF_TagCloud_2.png[]
+|===
+
+**Mask:** allows the user to upload a background mask (a square PNG image
+          containing black and white pixels only) to modify the rendering of the
+          tag cloud so that the words are drawn only on the white areas, since
+          the black pixels are interpreted as used. For example using the
+          following background mask
+
+image:images/cloudio/GEF_Mask_Image.png[]
+
+will result in the following tag cloud:
+
+image:images/cloudio/GEF_Cloudio.png[]
+
+Below are some further examples of tag clouds generated with Cloudio. The images
+were created with the help of the <<tag_cloud_view>>, modifying different
+parameters (such as colors, fonts or rotation angles). 
+
+== Woyzeck
+
+image:images/cloudio/Zest_cloudio_woyzeck.png[]
+
+Created from Georg Büchner's Woyzeck. The most frequent word was boosted.
+
+== Winnetou
+
+image:images/cloudio/Zest_cloudio_winnetou.png[]
+
+Karl May's Winnetou III, using two different fonts, 45-degree rotation and a
+relatively large x-axis variation when placing the words.
+
+== Nietzsche
+
+image:images/cloudio/Zest_cloudio_nietzsche.png[]
+
+
+'Also sprach Zarathustra', by Nietzsche. 90 degree rotation and a large x-axis
+variation.
+
+== Woyzeck Cluster
+
+image:images/cloudio/Zest_cloudio_woyzeck_cluster.png[]
+
+Same text as in the first example, but with a modified layout algorithm and
+label provider: Both labels and initial position are assigned based on the first
+character of the word (for instance, words starting with a to l are at the
+bottom left). Doesn't really look good, but shows how to extend the
+functionality to realize a cluster visualization or else...
