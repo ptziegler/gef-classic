@@ -8,4 +8,5 @@ endif::[]
 
 * xref:overview.adoc[Overview] - the big picture
 * xref:graph.adoc[Graph] - graphs, nodes and connections
+* xref:cloudio.adoc[Cloudio] - the Cloudio component
 * xref:migration-guide.adoc[Plug-in Migration Guide] - changes between individual releases
