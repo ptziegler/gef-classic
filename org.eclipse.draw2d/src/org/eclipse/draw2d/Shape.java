@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2025 IBM Corporation and others.
+ * Copyright (c) 2000, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -214,10 +214,18 @@ public abstract class Shape extends Figure {
 	/**
 	 * Sets whether XOR based fill should be used by the shape. It repaints this
 	 * figure.
+	 * <p>
+	 * <b>IMPORTANT:</b> This operation may not work on every platform or with every
+	 * configuration. Especially on Windows, GDI+ has no direct support for raster
+	 * operations (ROPs).
+	 * </p>
 	 *
 	 * @param b XOR fill state
 	 * @since 2.0
+	 * @deprecated XOR is not fully supported on all operating systems when Advanced
+	 *             Mode is enabled.
 	 */
+	@Deprecated(since = "2026-12")
 	public void setFillXOR(boolean b) {
 		if (xorFill != b) {
 			xorFill = b;
@@ -240,10 +248,18 @@ public abstract class Shape extends Figure {
 
 	/**
 	 * Sets whether XOR based outline should be used for this shape.
+	 * <p>
+	 * <b>IMPORTANT:</b> This operation may not work on every platform or with every
+	 * configuration. Especially on Windows, GDI+ has no direct support for raster
+	 * operations (ROPs).
+	 * </p>
 	 *
 	 * @param b <code>true</code> if the outline should be XOR'ed
 	 * @since 2.0
+	 * @deprecated XOR is not fully supported on all operating systems when Advanced
+	 *             Mode is enabled.
 	 */
+	@Deprecated(since = "2026-12")
 	public void setOutlineXOR(boolean b) {
 		if (xorOutline != b) {
 			xorOutline = b;
@@ -254,10 +270,18 @@ public abstract class Shape extends Figure {
 	/**
 	 * Sets whether XOR based fill and XOR based outline should be used for this
 	 * shape.
+	 * <p>
+	 * <b>IMPORTANT:</b> This operation may not work on every platform or with every
+	 * configuration. Especially on Windows, GDI+ has no direct support for raster
+	 * operations (ROPs).
+	 * </p>
 	 *
 	 * @param b <code>true</code> if the outline and fill should be XOR'ed
 	 * @since 2.0
+	 * @deprecated XOR is not fully supported on all operating systems when Advanced
+	 *             Mode is enabled.
 	 */
+	@Deprecated(since = "2026-12")
 	public void setXOR(boolean b) {
 		xorOutline = xorFill = b;
 		repaint();

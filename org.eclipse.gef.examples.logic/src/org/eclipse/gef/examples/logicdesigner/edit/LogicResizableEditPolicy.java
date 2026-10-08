@@ -15,7 +15,6 @@ package org.eclipse.gef.examples.logicdesigner.edit;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RectangleFigure;
@@ -114,10 +113,9 @@ public class LogicResizableEditPolicy extends ResizableEditPolicy {
 			figure = new AndGateFeedbackFigure();
 		} else {
 			figure = new RectangleFigure();
-			((RectangleFigure) figure).setXOR(true);
+			((RectangleFigure) figure).setAlpha(50);
 			((RectangleFigure) figure).setFill(true);
 			figure.setBackgroundColor(LogicEditorColors.INSTANCE.getGhostFill());
-			figure.setForegroundColor(ColorConstants.white);
 		}
 
 		return figure;

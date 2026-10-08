@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.gef.examples.logicdesigner.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Insets;
@@ -29,9 +28,8 @@ public class LogicFlowFeedbackBorder extends LogicFlowBorder {
 
 	@Override
 	public void paint(IFigure figure, Graphics graphics, Insets insets) {
-		graphics.setForegroundColor(ColorConstants.white);
 		graphics.setBackgroundColor(LogicEditorColors.INSTANCE.getGhostFill());
-		graphics.setXORMode(true);
+		graphics.setAlpha(50);
 
 		Rectangle r = figure.getBounds();
 
