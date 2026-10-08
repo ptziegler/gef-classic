@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2026 IBM Corporation and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.AncestorListener;
-import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.ColorProvider;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionLocator;
@@ -61,8 +61,8 @@ public class ConnectionEndpointEditPolicy extends SelectionHandlesEditPolicy {
 
 		ConnectionFocus() {
 			setFill(false);
-			setForegroundColor(ColorConstants.white);
-			setXOR(true);
+			setForegroundColor(ColorProvider.SystemColorFactory.getColorProvider().getMenuBackgroundSelected());
+			setLineWidth(3);
 			setOutline(true);
 		}
 

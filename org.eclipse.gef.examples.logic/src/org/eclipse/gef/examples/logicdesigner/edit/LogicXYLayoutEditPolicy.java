@@ -223,7 +223,7 @@ public class LogicXYLayoutEditPolicy extends org.eclipse.gef.editpolicies.XYLayo
 			figure = new LabelFeedbackFigure();
 		} else {
 			figure = new RectangleFigure();
-			((RectangleFigure) figure).setXOR(true);
+			((RectangleFigure) figure).setAlpha(50);
 			((RectangleFigure) figure).setFill(true);
 			figure.setBackgroundColor(LogicEditorColors.INSTANCE.getGhostFill());
 			figure.setForegroundColor(ColorConstants.white);

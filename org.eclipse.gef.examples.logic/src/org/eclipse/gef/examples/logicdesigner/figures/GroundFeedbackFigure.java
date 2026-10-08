@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.gef.examples.logicdesigner.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Rectangle;
 
@@ -23,8 +22,7 @@ public class GroundFeedbackFigure extends GroundFigure {
 	 */
 	@Override
 	protected void paintFigure(Graphics g) {
-		g.setXORMode(true);
-		g.setForegroundColor(ColorConstants.white);
+		g.setAlpha(50);
 		g.setBackgroundColor(LogicEditorColors.INSTANCE.getGhostFill());
 		Rectangle r = getBounds().getCopy();
 
